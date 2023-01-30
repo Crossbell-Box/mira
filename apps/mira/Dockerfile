@@ -35,9 +35,8 @@ COPY turbo.json turbo.json
 
 RUN pnpm run build --filter=mira...
 
+# Run the app
 FROM node:alpine AS runner
 WORKDIR /app
-
-
-# Run the app
+COPY --from=installer /app .
 CMD node apps/mira/dist/index.js
