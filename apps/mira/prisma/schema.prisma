@@ -1,0 +1,157 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model deposit {
+  id                      BigInt @id @default(autoincrement())
+  mainchain_id            BigInt
+  deposit_id              BigInt
+  recipient_address       String
+  crossbell_token_address String
+  token_quantity          String
+  transaction             String
+
+  @@unique([mainchain_id, deposit_id], map: "idx_deposit")
+  @@index([crossbell_token_address], map: "idx_deposit_crossbell_token_address")
+  @@index([recipient_address], map: "idx_deposit_recipient_address")
+  @@index([transaction], map: "idx_deposit_transaction")
+}
+
+model deposit_ack {
+  id                BigInt @id @default(autoincrement())
+  mainchain_id      BigInt
+  deposit_id        BigInt
+  recipient_address String
+  validator_address String
+  transaction       String
+
+  @@unique([mainchain_id, deposit_id], map: "idx_depositAck_deposit")
+  @@index([transaction], map: "idx_depositAck_transaction")
+  @@index([recipient_address, validator_address], map: "idx_depositAck_validator_address")
+}
+
+model event {
+  id               BigInt @id @default(autoincrement())
+  event_name       String
+  transaction_hash String
+  from_chain_id    String
+  created_at       BigInt
+
+  @@unique([event_name, transaction_hash], map: "idx_event_event_name_tx")
+  @@index([created_at], map: "idx_event_created_at")
+}
+
+model job {
+  id                BigInt @id @default(autoincrement())
+  listener          String
+  subscription_name String
+  type              BigInt
+  retry_count       BigInt
+  status            String
+  data              String
+  transaction       String
+  created_at        BigInt
+  from_chain_id     String
+  method            String
+
+  @@index([created_at], map: "idx_job_created_at")
+  @@index([listener], map: "idx_job_listener_name")
+  @@index([transaction], map: "idx_job_transaction")
+}
+
+model migrations {
+  id String @id @db.VarChar(255)
+}
+
+model processed_block {
+  id    String @id
+  block BigInt
+}
+
+model processed_receipt {
+  id         BigInt @id @default(autoincrement())
+  task_id    BigInt
+  receipt_id BigInt
+
+  @@unique([task_id, receipt_id], map: "idx_processedReceipt_taskId_receiptId")
+}
+
+model request_deposit {
+  id                      BigInt @id @default(autoincrement())
+  mainchain_id            BigInt
+  deposit_id              BigInt
+  recipient_address       String
+  crossbell_token_address String
+  token_quantity          String
+  transaction             String
+}
+
+model request_withdrawal {
+  id                      BigInt @id @default(autoincrement())
+  mainchain_id            BigInt
+  withdrawal_id           BigInt
+  recipient_address       String
+  mainchain_token_address String
+  token_quantity          String
+  fee                     String
+  transaction             String
+}
+
+model task {
+  id                 BigInt  @id @default(autoincrement())
+  chain_id           String
+  from_chain_id      String
+  task_type          String
+  data               String
+  retries            BigInt
+  status             String
+  last_error         String?
+  transaction_hash   String
+  from_transaction   String
+  transaction_status BigInt
+  created_at         BigInt
+  tx_created_at      BigInt  @default(0)
+
+  @@index([chain_id], map: "idx_job_chain_id")
+  @@index([created_at], map: "idx_task_created_at")
+  @@index([from_transaction], map: "idx_task_from_transaction")
+  @@index([transaction_hash], map: "idx_task_transaction_hash")
+  @@index([transaction_status], map: "idx_task_transaction_status")
+  @@index([tx_created_at], map: "idx_task_tx_created_at")
+}
+
+model withdrawal {
+  id                      BigInt @id @default(autoincrement())
+  mainchain_id            BigInt
+  withdrawal_id           BigInt
+  recipient_address       String
+  mainchain_token_address String
+  token_quantity          String
+  fee                     String
+  withdrawer_address      String
+  transaction             String
+
+  @@unique([mainchain_id, withdrawal_id], map: "idx_withdrawal")
+  @@index([mainchain_token_address], map: "idx_withdrawal_mainchain_token_address")
+  @@index([recipient_address], map: "idx_withdrawal_recipient_address")
+  @@index([transaction], map: "idx_withdrawal_transaction")
+  @@index([withdrawer_address], map: "idx_withdrawal_withdrawer_address")
+}
+
+model withdrawal_signatures {
+  id                BigInt @id @default(autoincrement())
+  mainchain_id      BigInt
+  withdrawal_id     BigInt
+  validator_address String
+  signature         String
+  transaction       String
+
+  @@unique([mainchain_id, withdrawal_id], map: "idx_withdrawalSignatures_withdrawal")
+  @@index([transaction], map: "idx_withdrawalSignatures_transaction")
+  @@index([validator_address], map: "idx_withdrawalSignatures_validator_address")
+}
