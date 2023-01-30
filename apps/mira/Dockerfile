@@ -4,8 +4,7 @@ RUN apk add --no-cache libc6-compat
 RUN apk update
 # Set working directory
 WORKDIR /app
-RUN npm i pnpm@latest -g
-RUN pnpm i -g turbo
+RUN npm i pnpm@latest turbo -g
 COPY . . 
 RUN turbo prune --scope=mira --docker
 
