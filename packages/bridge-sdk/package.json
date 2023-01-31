@@ -20,7 +20,6 @@
 		"typescript": "^4.9.4"
 	},
 	"dependencies": {
-		"ethereumjs-util": "^7.1.5",
 		"ethers": "^5.7.2"
 	}
 }

@@ -1,4 +1,4 @@
-import { fromRpcSig } from "ethereumjs-util";
+import { ethers } from "ethers";
 
 type Sigs = {
 	v: number;
@@ -33,10 +33,12 @@ export function recoverSignatures(
 	}
 
 	for (let i = 0; i < threshold; i++) {
-		const sig = fromRpcSig(Object.values(sortedSignerToSign)[i]);
+		const sig = ethers.utils.splitSignature(
+			Object.values(sortedSignerToSign)[i]
+		);
 		const v = sig.v;
-		const r = ("0x" + sig.r.toString("hex")) as `0x${string}`;
-		const s = ("0x" + sig.s.toString("hex")) as `0x${string}`;
+		const r = sig.r as `0x${string}`;
+		const s = sig.s as `0x${string}`;
 		const rsv = { v, r, s };
 		rsvList.push(rsv);
 	}
