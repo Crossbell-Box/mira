@@ -1,10 +1,10 @@
 {
 	"$schema": "https://turbo.build/schema.json",
 	"pipeline": {
-		"db:generate": {
+		"prisma:generate": {
 			"cache": false
 		},
-		"db:pull": {
+		"prisma:db:pull": {
 			"cache": false
 		},
 		"build": {
