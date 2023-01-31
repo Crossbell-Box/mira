@@ -45,5 +45,8 @@ COPY --from=installer /app/apps/mira/package.json .
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=installer --chown=nextjs:nodejs /app/apps/mira/.next/standalone ./
 COPY --from=installer --chown=nextjs:nodejs /app/apps/mira/.next/static ./apps/mira/.next/static
+# Copy public foler
+# https://github.com/vercel/next.js/issues/33895#issuecomment-1047088071
+COPY --from=installer --chown=nextjs:nodejs /app/apps/mira/public ./apps/mira/public
 
 CMD node apps/mira/server.js
