@@ -26,9 +26,9 @@ spec:
         - image: $IMAGE_TAG_RELEASE
           imagePullPolicy: Always
           name: mira
-          # envFrom:
-          #   - secretRef:
-          #       name: xchar
+          envFrom:
+            - secretRef:
+                name: mira-secret
           ports:
             - containerPort: 3000
               protocol: TCP
