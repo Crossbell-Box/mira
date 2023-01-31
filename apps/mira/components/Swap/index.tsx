@@ -4,7 +4,7 @@ import Form from "./Form";
 export default function Swap() {
 	return (
 		<Box
-			className="mx-auto max-w-[500px] p-5"
+			className="mx-auto max-w-[90vw] overflow-hidden p-5"
 			sx={(theme) => ({
 				backgroundColor:
 					theme.colorScheme === "dark"

@@ -8,34 +8,37 @@
 		"start": "next start",
 		"lint": "next lint",
 		"prisma:generate": "prisma generate",
-		"prisma:db:pull": "prisma db pull"
+		"prisma:db:pull": "prisma db pull && prisma generate"
 	},
 	"dependencies": {
 		"@crossbell/bridge-sdk": "workspace:*",
 		"@emotion/react": "^11.10.5",
 		"@emotion/server": "^11.10.0",
 		"@mantine/core": "^5.10.2",
+		"@mantine/dates": "^5.10.2",
 		"@mantine/hooks": "^5.10.2",
 		"@mantine/modals": "^5.10.2",
 		"@mantine/next": "^5.10.2",
 		"@mantine/notifications": "^5.10.2",
 		"@prisma/client": "^4.9.0",
 		"@tabler/icons-react": "^2.1.2",
-		"@tanstack/query-core": "^4.22.4",
-		"@tanstack/react-query": "^4.23.0",
-		"@trpc/client": "^10.9.0",
-		"@trpc/next": "^10.9.0",
-		"@trpc/react-query": "^10.9.0",
-		"@trpc/server": "^10.9.0",
-		"connectkit": "^1.1.2",
+		"@tanstack/query-core": "^4.24.4",
+		"@tanstack/react-query": "^4.24.4",
+		"@trpc/client": "^10.9.1",
+		"@trpc/next": "^10.9.1",
+		"@trpc/react-query": "^10.9.1",
+		"@trpc/server": "^10.9.1",
+		"connectkit": "^1.1.3",
+		"dayjs": "^1.11.7",
 		"ethers": "^5.7.2",
-		"framer-motion": "^8.5.4",
+		"framer-motion": "^8.5.5",
 		"jotai": "^1.13.1",
+		"mantine-react-table": "^0.6.2",
 		"next": "^13.1.6",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"superjson": "^1.12.2",
-		"wagmi": "^0.10.15",
+		"wagmi": "^0.11.2",
 		"zod": "^3.20.2"
 	},
 	"devDependencies": {
@@ -50,6 +53,6 @@
 		"prisma": "^4.9.0",
 		"tailwindcss": "^3.2.4",
 		"tsconfig": "workspace:*",
-		"typescript": "^4.9.4"
+		"typescript": "^4.9.5"
 	}
 }

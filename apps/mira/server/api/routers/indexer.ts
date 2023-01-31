@@ -3,12 +3,67 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "../trpc";
 
 export const indexerRouter = createTRPCRouter({
-	requestWithdrawalInfo: publicProcedure
-		.input(z.object({ transactionHash: z.string().optional() }))
+	pendingRequestWithdrawalCount: publicProcedure
+		.input(z.object({ recipient: z.string().optional() }))
 		.query(async ({ ctx, input }) => {
-			const res = await ctx.prisma.request_withdrawal.findFirst({
-				where: { transaction: input.transactionHash },
+			const { recipient } = input;
+
+			if (!recipient) return 0;
+
+			const count = await ctx.prisma.request_withdrawal.count({
+				where: { recipient_address: recipient, status: "pending" },
 			});
-			return res;
+			return count;
+		}),
+
+	pendingRequestDepositCount: publicProcedure
+		.input(z.object({ recipient: z.string().optional() }))
+		.query(async ({ ctx, input }) => {
+			const { recipient } = input;
+
+			if (!recipient) return 0;
+
+			const count = await ctx.prisma.request_deposit.count({
+				where: { recipient_address: recipient, status: "pending" },
+			});
+			return count;
+		}),
+
+	withdrawals: publicProcedure
+		.input(
+			z.object({
+				recipient: z.string().optional(),
+				limit: z.number().optional().default(10),
+				cursor: z.string().optional(),
+			})
+		)
+		.query(async ({ ctx, input }) => {
+			const { recipient, limit, cursor } = input;
+
+			if (!recipient) return { list: [], nextCursor: undefined, total: 0 };
+
+			const [list, total] = await Promise.all([
+				ctx.prisma.request_withdrawal.findMany({
+					where: { recipient_address: recipient },
+					orderBy: { id: "desc" },
+					take: limit + 1,
+					cursor: cursor ? { id: parseInt(cursor, 10) } : undefined,
+				}),
+				ctx.prisma.request_withdrawal.count({
+					where: { recipient_address: recipient },
+				}),
+			]);
+
+			let nextCursor: string | undefined = undefined;
+			if (list.length > limit) {
+				const nextItem = list.pop();
+				nextCursor = nextItem!.id.toString();
+			}
+
+			return {
+				list,
+				nextCursor,
+				total,
+			};
 		}),
 });

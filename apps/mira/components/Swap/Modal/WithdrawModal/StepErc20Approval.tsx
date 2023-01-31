@@ -93,13 +93,13 @@ export default function StepErc20Approval() {
 
 			{isLoadingAllowance ? (
 				<Text my="md">
-					<Loader size="xs" /> You have approved ... $MIRA ({requiredAllowance}{" "}
+					<Loader size="xs" /> You have approved ... MIRA ({requiredAllowance}{" "}
 					required) for the withdraw contract.
 				</Text>
 			) : (
 				<Text my="md">
 					{hasEnoughAllowance ? "✅" : "❌"} You have approved{" "}
-					{currentAllowance} $MIRA ({requiredAllowance} required) for the
+					{currentAllowance} MIRA ({requiredAllowance} required) for the
 					withdraw contract.
 				</Text>
 			)}

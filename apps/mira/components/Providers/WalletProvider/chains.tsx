@@ -20,15 +20,15 @@ const crossbell: Chain & {
 	logo?: ReactElement; // TODO: a PR to family connectkit
 } = crossbell_;
 
-export const prodMainChains = [mainnet, polygon, bsc];
+export const prodMainChains: Chain[] = [mainnet, polygon, bsc];
 export const prodCrossbellChain = crossbell;
-export const prodChains = [mainnet, polygon, bsc, crossbell];
+export const prodChains: Chain[] = [mainnet, polygon, bsc, crossbell];
 
 // testnet
 
-export const devMainChains = [goerli, polygonMumbai, bscTestnet];
+export const devMainChains: Chain[] = [goerli, polygonMumbai, bscTestnet];
 export const devCrossbellChain = sepolia;
-export const devChains = [goerli, polygonMumbai, bscTestnet, sepolia];
+export const devChains: Chain[] = [goerli, polygonMumbai, bscTestnet, sepolia];
 
 export const mainChains = isProd() ? prodMainChains : devMainChains;
 export const crossbellChain = isProd() ? prodCrossbellChain : devCrossbellChain;
