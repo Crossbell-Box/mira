@@ -33,5 +33,18 @@ RUN pnpm run build --filter=mira...
 # Run the app
 FROM node:19 AS runner
 WORKDIR /app
-COPY --from=installer /app .
-CMD node apps/mira/dist/index.js
+
+# Don't run production as root
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+USER nextjs
+
+COPY --from=installer /app/apps/mira/next.config.js .
+COPY --from=installer /app/apps/mira/package.json .
+
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=installer --chown=nextjs:nodejs /app/apps/mira/.next/standalone ./
+COPY --from=installer --chown=nextjs:nodejs /app/apps/mira/.next/static ./apps/mira/.next/static
+
+CMD node apps/mira/server.js
