@@ -27,3 +27,11 @@ export function useSwitchNetwork(networkId: number) {
 export function getNetworkNameById(networkId: number) {
 	return chains.find((chain) => chain.id === networkId)?.name;
 }
+
+export function getTxScanUrl(networkId: number, txHash: string) {
+	const chain = chains.find((chain) => chain.id === networkId);
+	if (!chain || !chain.blockExplorers?.default) {
+		return undefined;
+	}
+	return chain.blockExplorers.default.url + "/tx/" + txHash;
+}

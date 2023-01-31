@@ -1,44 +1,202 @@
 import { api } from "@/utils/api";
 import { useAccount } from "wagmi";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MantineReactTable } from "mantine-react-table";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import type { request_withdrawal } from "@prisma/client";
+import { crossbellChain } from "../Providers/WalletProvider/chains";
+import {
+	renderAmount,
+	renderBigNumberId,
+	renderChainIdAndName,
+	renderStatusCell,
+	renderTxUrl,
+} from "./table-helpers";
+import { Box, Button, Menu, Text } from "@mantine/core";
 
 export default function WithdrawalTable() {
 	const { address } = useAccount();
 
-	const { data, isLoading } = api.indexer.withdrawals.useInfiniteQuery(
-		{ recipient: address },
-		{ getNextPageParam: (page) => page.nextCursor }
-	);
-
-	const columns = useMemo<MRT_ColumnDef<request_withdrawal>[]>(
-		() => [
-			{
-				accessorKey: "mainchain_id",
-				header: "Mainchain ID",
-			},
-			{
-				accessorKey: "withdrawal_id",
-				header: "Withdrawal ID",
-			},
-		],
-		[]
-	);
+	const { data, isLoading, isFetching, isError, fetchNextPage } =
+		api.indexer.withdrawals.useInfiniteQuery(
+			{ recipient: address },
+			{ getNextPageParam: (page) => page.nextCursor }
+		);
 
 	const list = useMemo<request_withdrawal[]>(() => {
 		if (!data) return [];
 		return data.pages.flatMap((page) => page.list);
 	}, [data]);
 
+	const tableContainerRef = useRef<HTMLDivElement>(null); //we can get access to the underlying TableContainer element and react to its scroll events
+	const rowVirtualizerInstanceRef = useRef(null); //we can get access to the underlying Virtualizer instance and call its scrollToIndex method
+
+	const [columnFilters, setColumnFilters] = useState<any[]>([]);
+	const [globalFilter, setGlobalFilter] = useState<any>();
+	const [sorting, setSorting] = useState<any[]>([]);
+
+	const columns = useMemo<MRT_ColumnDef<request_withdrawal>[]>(
+		() => [
+			{
+				accessorKey: "status",
+				header: "Status",
+				Cell: renderStatusCell,
+			},
+			{
+				accessorKey: "mainchain_id",
+				header: "Mainchain ID",
+				Cell: renderChainIdAndName,
+			},
+			{
+				accessorKey: "withdrawal_id",
+				header: "Withdrawal ID",
+				Cell: renderBigNumberId,
+			},
+			{
+				accessorKey: "token_quantity",
+				header: "Amount",
+				Cell: ({ row, renderedCellValue }) => {
+					const networkId = Number(row.original.mainchain_id);
+					const tokenAddress = row.original.mainchain_token_address;
+					return renderAmount({
+						renderedCellValue,
+						networkId,
+						tokenAddress,
+					});
+				},
+			},
+
+			{
+				accessorKey: "fee",
+				header: "Claim Tip Fee",
+				Cell: ({ row, renderedCellValue }) => {
+					const networkId = Number(row.original.mainchain_id);
+					const tokenAddress = row.original.mainchain_token_address;
+					return renderAmount({
+						renderedCellValue,
+						networkId,
+						tokenAddress,
+					});
+				},
+			},
+			{
+				accessorKey: "transaction",
+				header: "Request Tx",
+				Cell: ({ renderedCellValue }) => {
+					const networkId = crossbellChain.id;
+					const txHash = renderedCellValue?.toString() ?? "";
+					return renderTxUrl({ networkId, txHash });
+				},
+			},
+			{
+				accessorKey: "withdrawal_transaction",
+				header: "Withdrawal Tx",
+				Cell: ({ row, renderedCellValue }) => {
+					const networkId = Number(row.original.mainchain_id);
+					const txHash = renderedCellValue?.toString() ?? "";
+					return renderTxUrl({ networkId, txHash });
+				},
+			},
+		],
+		[]
+	);
+
+	const totalDBRowCount = data?.pages?.[0]?.total ?? 0;
+	const totalFetched = list.length;
+
+	//called on scroll and possibly on mount to fetch more data as the user scrolls and reaches bottom of table
+	const fetchMoreOnBottomReached = useCallback(
+		(containerRefElement?: HTMLDivElement | null) => {
+			if (containerRefElement) {
+				const { scrollHeight, scrollTop, clientHeight } = containerRefElement;
+				//once the user has scrolled within 400px of the bottom of the table, fetch more data if we can
+				if (
+					scrollHeight - scrollTop - clientHeight < 400 &&
+					!isFetching &&
+					totalFetched < totalDBRowCount
+				) {
+					fetchNextPage();
+				}
+			}
+		},
+		[fetchNextPage, isFetching, totalFetched, totalDBRowCount]
+	);
+
+	//scroll to top of table when sorting or filters change
+	useEffect(() => {
+		if (rowVirtualizerInstanceRef.current) {
+			// @ts-ignore FIXME: fix this type error
+			rowVirtualizerInstanceRef.current.scrollToIndex(0);
+		}
+	}, [sorting, columnFilters, globalFilter]);
+
+	//a check on mount to see if the table is already scrolled to the bottom and immediately needs to fetch more data
+	useEffect(() => {
+		fetchMoreOnBottomReached(tableContainerRef.current);
+	}, [fetchMoreOnBottomReached]);
+
 	return (
 		<MantineReactTable
 			columns={columns}
 			data={list}
-			enableRowSelection
+			getRowId={(row) => row?.id?.toString()}
+			enablePagination={false}
 			enableColumnOrdering
+			enableRowVirtualization
+			manualFiltering
+			manualPagination
+			manualSorting
+			/// TODO: advanced filtering
+			enableFilters={false}
 			enableGlobalFilter={false}
+			enableColumnFilters={false}
+			enableSorting={false}
+			///
+			enableRowActions
+			displayColumnDefOptions={{
+				"mrt-row-actions": {
+					header: "Actions", //change header text
+					size: 100, //make actions column wider
+				},
+			}}
+			renderRowActions={({ row }) => (
+				<Button size="xs" variant="default">
+					VIEW
+				</Button>
+			)}
+			mantineTableContainerProps={{
+				ref: tableContainerRef, //get access to the table container element
+				sx: { maxHeight: "80vh" }, //give the table a max height
+				onScroll: (
+					event //add an event listener to the table container element
+				) => fetchMoreOnBottomReached(event.target as HTMLDivElement),
+			}}
+			mantineToolbarAlertBannerProps={
+				isError
+					? {
+							color: "error",
+							children: "Error loading data",
+					  }
+					: undefined
+			}
+			renderBottomToolbarCustomActions={() => (
+				<Text>
+					Fetched {totalFetched} of {totalDBRowCount} total rows.
+				</Text>
+			)}
+			onColumnFiltersChange={setColumnFilters}
+			onGlobalFilterChange={setGlobalFilter}
+			onSortingChange={setSorting}
+			state={{
+				columnFilters,
+				globalFilter,
+				isLoading,
+				showAlertBanner: isError,
+				showProgressBars: isFetching,
+				sorting,
+			}}
+			rowVirtualizerInstanceRef={rowVirtualizerInstanceRef} //get access to the virtualizer instance
+			rowVirtualizerProps={{ overscan: 10 }}
 		/>
 	);
 }

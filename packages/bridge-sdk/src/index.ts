@@ -5,6 +5,7 @@ export { Abi__factory as ValidatorAbiFactory } from "./abi/Validator/types";
 export { CONTRACT_ADDRESS, getContractAddress } from "./contract/address";
 export {
 	getTokenDecimals,
+	getTokenName,
 	formatTokenAmount,
 	parseTokenAmount,
 } from "./contract/token";

@@ -5,8 +5,23 @@ import { TokenName } from "./type";
 
 export function getTokenDecimals(
 	networkId: number,
-	tokenName: TokenName
+	tokenNameOrAddress: string
+): number;
+export function getTokenDecimals(
+	networkId: number,
+	tokenNameOrAddress: TokenName
+): number;
+export function getTokenDecimals(
+	networkId: number,
+	tokenNameOrAddress: TokenName | string
 ): number {
+	let tokenName: TokenName | undefined;
+	if (tokenNameOrAddress.startsWith("0x")) {
+		tokenName = getTokenName(networkId, tokenNameOrAddress);
+	} else {
+		tokenName = tokenNameOrAddress as TokenName;
+	}
+
 	const networkName = networkIdToNameMapping[networkId];
 	if (!networkName) {
 		throw new Error(`Unknown network id: ${networkId}`);
@@ -39,7 +54,11 @@ export function formatTokenAmount(
 	amount: BigNumberish,
 	decimals: number
 ): string {
-	return ethers.utils.formatUnits(amount, decimals);
+	try {
+		return ethers.utils.formatUnits(amount, decimals);
+	} catch (e) {
+		return "0";
+	}
 }
 
 /**
@@ -50,5 +69,32 @@ export function formatTokenAmount(
  * @example parseTokenAmount("1.0", 18) => BigNumber(1000000000000000000)
  */
 export function parseTokenAmount(amount: string, decimals: number): BigNumber {
-	return ethers.utils.parseUnits(amount, decimals);
+	try {
+		return ethers.utils.parseUnits(amount, decimals);
+	} catch (e) {
+		return BigNumber.from(0);
+	}
+}
+
+export function getTokenName(
+	networkId: number,
+	tokenAddress: string
+): TokenName {
+	const networkName = networkIdToNameMapping[networkId];
+	if (!networkName) {
+		throw new Error(`Unknown network id: ${networkId}`);
+	}
+
+	for (const tokenName in CONTRACT_ADDRESS) {
+		// @ts-ignore
+		const token = CONTRACT_ADDRESS[tokenName];
+		if (networkName in token) {
+			// @ts-ignore
+			if (token[networkName]?.address === tokenAddress) {
+				return tokenName as TokenName;
+			}
+		}
+	}
+
+	throw new Error(`Unknown token address: ${tokenAddress}`);
 }
