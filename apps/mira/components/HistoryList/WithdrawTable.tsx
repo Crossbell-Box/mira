@@ -15,6 +15,11 @@ import {
 import { Button, Text } from "@mantine/core";
 import { useWithdrawModal } from "../Swap/Modal/WithdrawModal";
 import { BigNumber } from "ethers";
+import {
+	formatTokenAmount,
+	getTokenDecimals,
+	getTokenName,
+} from "@crossbell/bridge-sdk";
 
 export default function WithdrawalTable() {
 	const { address } = useAccount();
@@ -139,8 +144,15 @@ export default function WithdrawalTable() {
 
 	const RowActions = ({ row }: { row: MRT_Row<request_withdrawal> }) => {
 		const o = row.original;
+		const networkId = Number(o.mainchain_id);
+		const amount = BigNumber.from(o.token_quantity);
+		const tokenAddress = row.original.mainchain_token_address;
+		const tokenName = getTokenName(networkId, tokenAddress);
+		const decimals = getTokenDecimals(networkId, tokenName);
+		const formattedTokenAmount = formatTokenAmount(amount, decimals);
 		const { open } = useWithdrawModal({
 			state: {
+				formAmount: formattedTokenAmount,
 				requestWithdrawalInfo: {
 					transactionHash: o.transaction,
 					networkId: Number(o.mainchain_id),

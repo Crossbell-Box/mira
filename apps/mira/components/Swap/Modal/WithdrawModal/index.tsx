@@ -2,6 +2,7 @@ import { Stepper } from "@mantine/core";
 import { closeModal, openModal } from "@mantine/modals";
 import { useAtom } from "jotai";
 import { useResetAtom } from "jotai/utils";
+import { formAmountAtom } from "../../store";
 import StepClaim from "./StepClaim";
 import StepComplete from "./StepComplete";
 import StepErc20Approval from "./StepErc20Approval";
@@ -15,6 +16,7 @@ export function useWithdrawModal({
 }: {
 	state?: {
 		step?: ReturnType<(typeof step)["read"]>;
+		formAmount?: ReturnType<(typeof formAmountAtom)["read"]>;
 		requestWithdrawalInfo?: ReturnType<(typeof requestWithdrawalInfo)["read"]>;
 		withdrawalInfo?: ReturnType<(typeof withdrawalInfo)["read"]>;
 	};
@@ -24,6 +26,7 @@ export function useWithdrawModal({
 	const [_, setStep] = useAtom(step);
 	const [__, setRequestWithdrawalInfo] = useAtom(requestWithdrawalInfo);
 	const [___, setWithdrawalInfo] = useAtom(withdrawalInfo);
+	const [____, setFormAmount] = useAtom(formAmountAtom);
 	const resetStep = useResetAtom(step);
 	const resetRequestWithdrawalInfo = useResetAtom(requestWithdrawalInfo);
 	const resetWithdrawalInfo = useResetAtom(withdrawalInfo);
@@ -35,13 +38,17 @@ export function useWithdrawModal({
 	};
 
 	const initState = () => {
+		if (state.formAmount) {
+			setFormAmount(state.formAmount);
+			// setStep(0);
+		}
 		if (state.requestWithdrawalInfo?.transactionHash) {
 			setRequestWithdrawalInfo(state.requestWithdrawalInfo);
-			setStep(3);
+			// setStep(3);
 		}
 		if (state.withdrawalInfo?.transactionHash) {
 			setWithdrawalInfo(state.withdrawalInfo);
-			setStep(5);
+			// setStep(5);
 		}
 		if (state.step) {
 			setStep(state.step);

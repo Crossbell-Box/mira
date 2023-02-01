@@ -83,7 +83,8 @@ export default function StepRequestWithdrawal() {
 
 	const txHash = <Code fw="bold">{requestWithdrawalTx?.hash}</Code>;
 
-	const isSuccess = isSuccessSendTransaction && isMined;
+	const hasAlreadyMined = requestWithdrawalInfoValue.transactionHash; // when recovering from history
+	const isSuccess = hasAlreadyMined || (isSuccessSendTransaction && isMined);
 
 	return (
 		<div>
