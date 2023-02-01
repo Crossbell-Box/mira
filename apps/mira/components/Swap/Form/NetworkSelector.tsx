@@ -29,18 +29,17 @@ export default function NetworkSelector({
 
 			<Space h={5} />
 
-			<div>
-				<SegmentedControl
-					classNames={{ root: "w-full overflow-auto" }}
-					{...props}
-					data={chains.map((chain) => ({
-						label: chain.name,
-						value: chain.id.toString(),
-					}))}
-					value={value?.toString()}
-					onChange={(v) => onChange?.(parseInt(v))}
-				/>
-			</div>
+			<SegmentedControl
+				classNames={{ root: "w-full overflow-auto" }}
+				styles={{ root: { width: "100%" } }}
+				{...props}
+				data={chains.map((chain) => ({
+					label: chain.name,
+					value: chain.id.toString(),
+				}))}
+				value={value?.toString()}
+				onChange={(v) => onChange?.(parseInt(v))}
+			/>
 		</div>
 	);
 }
