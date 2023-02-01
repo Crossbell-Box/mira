@@ -64,7 +64,8 @@ export default function Form({
 		}
 	};
 
-	const isAmountLargerThanBalance = useIsAmountLargerThanBalance();
+	const isAmountLargerThanBalance =
+		useIsAmountLargerThanBalance() && mode === "withdraw";
 
 	const submitBtnDisabled =
 		!value || (isConnected && isAmountLargerThanBalance);
