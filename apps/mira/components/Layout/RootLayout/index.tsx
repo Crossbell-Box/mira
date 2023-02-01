@@ -1,3 +1,4 @@
+import ContactButton from "@/components/ContactButton";
 import { AppShell } from "@mantine/core";
 import { ReactElement } from "react";
 import Header from "./Header";
@@ -21,6 +22,8 @@ export default function RootLayout({
 			})}
 		>
 			{children}
+
+			<ContactButton />
 		</AppShell>
 	);
 }

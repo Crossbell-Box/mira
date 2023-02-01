@@ -1,3 +1,4 @@
+import FaqAccordion from "@/components/FaqAccordion";
 import { getRootLayout } from "@/components/Layout/RootLayout";
 import PendingAlert from "@/components/PendingAlert";
 import Swap from "@/components/Swap";
@@ -10,6 +11,8 @@ const Page: NextPageWithLayout = () => {
 			<Swap />
 
 			<PendingAlert />
+
+			<FaqAccordion />
 		</Stack>
 	);
 };
