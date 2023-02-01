@@ -11,7 +11,7 @@ import React, { PropsWithChildren } from "react";
 
 export const emotionCache = createEmotionCache({
 	key: "mantine",
-	prepend: true, // https://github.com/mantinedev/mantine/issues/823#issuecomment-1065833889
+	prepend: false, // https://github.com/mantinedev/mantine/issues/823#issuecomment-1065833889
 });
 
 export default function ThemeProvider({ children }: PropsWithChildren) {
