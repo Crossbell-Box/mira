@@ -1,19 +1,34 @@
+import { formatTokenAmount, getTokenDecimals } from "@crossbell/bridge-sdk";
 import { Button, Code, Space, Text } from "@mantine/core";
 import { useAtom } from "jotai";
 import { useWithdrawModal } from ".";
-import { formAmountAtom } from "../../store";
 import { requestWithdrawalInfo } from "./store";
 
 export default function StepComplete() {
-	const [amountStr] = useAtom(formAmountAtom);
-
 	const [requestWithdrawalInfoValue] = useAtom(requestWithdrawalInfo);
+	const [withdrawalInfoValue] = useAtom(requestWithdrawalInfo);
+
+	const decimals = getTokenDecimals(
+		requestWithdrawalInfoValue.networkId,
+		"USDC"
+	);
+	const amountStr = formatTokenAmount(
+		requestWithdrawalInfoValue.amount,
+		decimals
+	);
+	const feeStr = formatTokenAmount(requestWithdrawalInfoValue.fee, decimals);
 
 	const { close } = useWithdrawModal();
 
 	const amountElement = (
 		<Text fw="bold" inline span>
 			{amountStr}
+		</Text>
+	);
+
+	const feeElement = (
+		<Text fw="bold" inline span>
+			{feeStr}
 		</Text>
 	);
 
@@ -27,6 +42,9 @@ export default function StepComplete() {
 				Request Tx:{" "}
 				<Code fw="bold">{requestWithdrawalInfoValue.transactionHash}</Code>
 				<br />
+				Withdrawal Tx:{" "}
+				<Code fw="bold">{withdrawalInfoValue.transactionHash}</Code>
+				<br />
 				Network ID:{" "}
 				<Code fw="bold">{requestWithdrawalInfoValue.networkId}</Code>
 				<br />
@@ -37,6 +55,7 @@ export default function StepComplete() {
 				<br />
 				Amount: {amountElement} USDC
 				<br />
+				Claim Tip Fee: {feeElement} USDC
 			</Text>
 
 			<Space h="lg" />

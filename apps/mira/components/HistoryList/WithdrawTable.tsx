@@ -1,7 +1,7 @@
 import { api } from "@/utils/api";
 import { useAccount } from "wagmi";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { MantineReactTable } from "mantine-react-table";
+import { MantineReactTable, MRT_Row } from "mantine-react-table";
 import type { MRT_ColumnDef } from "mantine-react-table";
 import type { request_withdrawal } from "@prisma/client";
 import { crossbellChain } from "../Providers/WalletProvider/chains";
@@ -12,7 +12,9 @@ import {
 	renderStatusCell,
 	renderTxUrl,
 } from "./table-helpers";
-import { Box, Button, Menu, Text } from "@mantine/core";
+import { Button, Text } from "@mantine/core";
+import { useWithdrawModal } from "../Swap/Modal/WithdrawModal";
+import { BigNumber } from "ethers";
 
 export default function WithdrawalTable() {
 	const { address } = useAccount();
@@ -135,6 +137,41 @@ export default function WithdrawalTable() {
 		fetchMoreOnBottomReached(tableContainerRef.current);
 	}, [fetchMoreOnBottomReached]);
 
+	const renderRowActions = useCallback(
+		({ row }: { row: MRT_Row<request_withdrawal> }) => {
+			const o = row.original;
+			const { open } = useWithdrawModal({
+				state: {
+					requestWithdrawalInfo: {
+						transactionHash: o.transaction,
+						networkId: Number(o.mainchain_id),
+						withdrawalId: Number(o.withdrawal_id),
+						amount: BigNumber.from(o.token_quantity),
+						fee: BigNumber.from(o.fee),
+						recipient: o.recipient_address,
+					},
+					withdrawalInfo: {
+						transactionHash: o.withdrawal_transaction ?? "",
+					},
+				},
+			});
+
+			return (
+				<Button
+					size="xs"
+					variant={o.status === "pending" ? "outline" : "default"}
+					onClick={(e) => {
+						e.stopPropagation();
+						open();
+					}}
+				>
+					{o.status === "pending" ? "Withdraw" : "View"}
+				</Button>
+			);
+		},
+		[list]
+	);
+
 	return (
 		<MantineReactTable
 			columns={columns}
@@ -159,11 +196,7 @@ export default function WithdrawalTable() {
 					size: 100, //make actions column wider
 				},
 			}}
-			renderRowActions={({ row }) => (
-				<Button size="xs" variant="default">
-					VIEW
-				</Button>
-			)}
+			renderRowActions={renderRowActions}
 			mantineTableContainerProps={{
 				ref: tableContainerRef, //get access to the table container element
 				sx: { maxHeight: "80vh" }, //give the table a max height

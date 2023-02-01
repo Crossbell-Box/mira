@@ -8,21 +8,49 @@ import StepErc20Approval from "./StepErc20Approval";
 import StepRequestWithdrawal from "./StepRequestWithdrawal";
 import StepSwitchMainchainNetwork from "./StepSwitchMainchainNetwork";
 import StepSwitchSidechainNetwork from "./StepSwitchSidechainNetwork";
-import { requestWithdrawalInfo, step } from "./store";
+import { requestWithdrawalInfo, step, withdrawalInfo } from "./store";
 
-export function useWithdrawModal() {
+export function useWithdrawModal({
+	state = {},
+}: {
+	state?: {
+		step?: ReturnType<(typeof step)["read"]>;
+		requestWithdrawalInfo?: ReturnType<(typeof requestWithdrawalInfo)["read"]>;
+		withdrawalInfo?: ReturnType<(typeof withdrawalInfo)["read"]>;
+	};
+} = {}) {
 	const id = "withdraw-modal";
 
 	const [_, setStep] = useAtom(step);
+	const [__, setRequestWithdrawalInfo] = useAtom(requestWithdrawalInfo);
+	const [___, setWithdrawalInfo] = useAtom(withdrawalInfo);
 	const resetStep = useResetAtom(step);
 	const resetRequestWithdrawalInfo = useResetAtom(requestWithdrawalInfo);
+	const resetWithdrawalInfo = useResetAtom(withdrawalInfo);
 
 	const reset = () => {
 		resetStep();
 		resetRequestWithdrawalInfo();
+		resetWithdrawalInfo();
 	};
 
-	const open = () =>
+	const initState = () => {
+		if (state.requestWithdrawalInfo?.transactionHash) {
+			setRequestWithdrawalInfo(state.requestWithdrawalInfo);
+			setStep(3);
+		}
+		if (state.withdrawalInfo?.transactionHash) {
+			setWithdrawalInfo(state.withdrawalInfo);
+			setStep(5);
+		}
+		if (state.step) {
+			setStep(state.step);
+		}
+	};
+
+	const open = () => {
+		initState();
+
 		openModal({
 			modalId: id,
 			centered: true,
@@ -36,6 +64,7 @@ export function useWithdrawModal() {
 				}, 100);
 			},
 		});
+	};
 
 	const close = () => {
 		reset();

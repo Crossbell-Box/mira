@@ -1,4 +1,4 @@
-import { CrossbellLogo } from "@/components/Logo";
+import { BellLogo } from "@/components/Logo";
 import { isProd } from "@/utils/env";
 import { ReactElement } from "react";
 import { Chain, configureChains } from "wagmi";
@@ -17,8 +17,11 @@ import { jsonRpcProvider } from "wagmi/providers/jsonRpc";
 import { publicProvider } from "wagmi/providers/public";
 
 const crossbell: Chain & {
-	logo?: ReactElement; // TODO: a PR to family connectkit
-} = crossbell_;
+	logo?: ReactElement;
+} = {
+	...crossbell_,
+	// logo: <BellLogo />,
+};
 
 export const prodMainChains: Chain[] = [mainnet, polygon, bsc];
 export const prodCrossbellChain = crossbell;
