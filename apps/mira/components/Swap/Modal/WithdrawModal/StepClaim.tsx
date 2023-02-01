@@ -5,17 +5,24 @@ import {
 	useGetWithdrawalSignature,
 } from "@/utils/contract/CrossbellGateway";
 import { useGetRequiredValidatorNumber } from "@/utils/contract/Validator";
-import { recoverSignatures } from "@crossbell/bridge-sdk";
+import {
+	formatTokenAmount,
+	getTokenDecimals,
+	recoverSignatures,
+} from "@crossbell/bridge-sdk";
 import { Button, Code, Loader, Space, Text } from "@mantine/core";
 import { useAtom } from "jotai";
 import { useWaitForTransaction } from "wagmi";
-import { formAmountAtom } from "../../store";
 import { requestWithdrawalInfo, step, withdrawalInfo } from "./store";
 
 export default function StepClaim() {
-	const [amountStr] = useAtom(formAmountAtom);
-
 	const [requestWithdrawalInfoValue] = useAtom(requestWithdrawalInfo);
+	const amount = requestWithdrawalInfoValue.amount;
+	const decimals = getTokenDecimals(
+		requestWithdrawalInfoValue.networkId,
+		"USDC"
+	);
+	const amountStr = formatTokenAmount(amount, decimals);
 
 	// 1. get withdrawal entry
 	const { data: withdrawalEntry, isLoading: isLoadingWithdrawalEntry } =
