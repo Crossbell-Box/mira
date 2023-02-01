@@ -137,40 +137,37 @@ export default function WithdrawalTable() {
 		fetchMoreOnBottomReached(tableContainerRef.current);
 	}, [fetchMoreOnBottomReached]);
 
-	const renderRowActions = useCallback(
-		({ row }: { row: MRT_Row<request_withdrawal> }) => {
-			const o = row.original;
-			const { open } = useWithdrawModal({
-				state: {
-					requestWithdrawalInfo: {
-						transactionHash: o.transaction,
-						networkId: Number(o.mainchain_id),
-						withdrawalId: Number(o.withdrawal_id),
-						amount: BigNumber.from(o.token_quantity),
-						fee: BigNumber.from(o.fee),
-						recipient: o.recipient_address,
-					},
-					withdrawalInfo: {
-						transactionHash: o.withdrawal_transaction ?? "",
-					},
+	const RowActions = ({ row }: { row: MRT_Row<request_withdrawal> }) => {
+		const o = row.original;
+		const { open } = useWithdrawModal({
+			state: {
+				requestWithdrawalInfo: {
+					transactionHash: o.transaction,
+					networkId: Number(o.mainchain_id),
+					withdrawalId: Number(o.withdrawal_id),
+					amount: BigNumber.from(o.token_quantity),
+					fee: BigNumber.from(o.fee),
+					recipient: o.recipient_address,
 				},
-			});
+				withdrawalInfo: {
+					transactionHash: o.withdrawal_transaction ?? "",
+				},
+			},
+		});
 
-			return (
-				<Button
-					size="xs"
-					variant={o.status === "pending" ? "outline" : "default"}
-					onClick={(e) => {
-						e.stopPropagation();
-						open();
-					}}
-				>
-					{o.status === "pending" ? "Withdraw" : "View"}
-				</Button>
-			);
-		},
-		[list]
-	);
+		return (
+			<Button
+				size="xs"
+				variant={o.status === "pending" ? "outline" : "default"}
+				onClick={(e) => {
+					e.stopPropagation();
+					open();
+				}}
+			>
+				{o.status === "pending" ? "Withdraw" : "View"}
+			</Button>
+		);
+	};
 
 	return (
 		<MantineReactTable
@@ -196,7 +193,7 @@ export default function WithdrawalTable() {
 					size: 100, //make actions column wider
 				},
 			}}
-			renderRowActions={renderRowActions}
+			renderRowActions={({ row }) => <RowActions row={row} />}
 			mantineTableContainerProps={{
 				ref: tableContainerRef, //get access to the table container element
 				sx: { maxHeight: "80vh" }, //give the table a max height

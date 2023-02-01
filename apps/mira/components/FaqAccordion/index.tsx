@@ -44,7 +44,7 @@ export default function FaqAccordion() {
 			</Accordion.Item>
 
 			<Accordion.Item value="problem">
-				<Accordion.Control>I'm encountering problems</Accordion.Control>
+				<Accordion.Control>I&apos;m encountering problems</Accordion.Control>
 				<Accordion.Panel>
 					If you have any problems while operating the website, please contact
 					us on{" "}
