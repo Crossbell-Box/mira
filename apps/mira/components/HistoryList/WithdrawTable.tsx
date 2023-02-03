@@ -165,6 +165,7 @@ export default function WithdrawalTable() {
 					transactionHash: o.withdrawal_transaction ?? "",
 				},
 			},
+			checkAllowance: true,
 		});
 
 		return (

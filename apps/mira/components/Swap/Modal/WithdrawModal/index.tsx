@@ -69,6 +69,7 @@ export function useWithdrawModal({
 
 	const approveModalId = "approve-modal";
 	const openApproveModal = () => {
+		let shouldResetState = true;
 		openModal({
 			modalId: approveModalId,
 			centered: true,
@@ -79,15 +80,18 @@ export function useWithdrawModal({
 				<ModalApprove
 					onDone={() => {
 						checkAllowance = false;
+						shouldResetState = false;
 						closeApproveModal();
 						open();
 					}}
 				/>
 			),
 			onClose: () => {
-				setTimeout(() => {
-					resetState();
-				}, 100);
+				if (shouldResetState) {
+					setTimeout(() => {
+						resetState();
+					}, 100);
+				}
 			},
 		});
 	};
