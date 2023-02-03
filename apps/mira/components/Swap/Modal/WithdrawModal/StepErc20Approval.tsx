@@ -131,7 +131,7 @@ export default function StepErc20Approval({
 				</Text>
 			) : (
 				<Text my="md">
-					{hasEnoughAllowance ? "✅" : "❌"} You have approved{" "}
+					{hasEnoughAllowance ? "✅" : "😕"} You have approved{" "}
 					{currentAllowance} MIRA ({requiredAllowance} required) for the
 					withdraw contract.
 				</Text>

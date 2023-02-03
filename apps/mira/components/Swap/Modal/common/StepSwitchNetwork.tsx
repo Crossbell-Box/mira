@@ -48,7 +48,7 @@ export default function StepSwitchNetwork({
 			</Text>
 
 			<Text my="md">
-				{isOnCurrentChain ? "✅" : "❌"} You are now on the {currentNetworkName}{" "}
+				{isOnCurrentChain ? "✅" : "😕"} You are now on the {currentNetworkName}{" "}
 				network.
 			</Text>
 
