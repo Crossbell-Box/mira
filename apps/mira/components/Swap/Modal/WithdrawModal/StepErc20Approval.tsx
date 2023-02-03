@@ -15,7 +15,7 @@ import { useAccount, useWaitForTransaction } from "wagmi";
 import { useWithdrawModal } from ".";
 import { formAmountAtom, formSidechainNetworkIdAtom } from "../../store";
 
-export function isAllowanceEnough() {
+export function useIsAllowanceEnough() {
 	const [sidechainNetworkId] = useAtom(formSidechainNetworkIdAtom);
 	const [amountStr] = useAtom(formAmountAtom);
 
