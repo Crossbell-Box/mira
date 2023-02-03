@@ -15,7 +15,36 @@ import { useAccount, useWaitForTransaction } from "wagmi";
 import { useWithdrawModal } from ".";
 import { formAmountAtom, formSidechainNetworkIdAtom } from "../../store";
 
-export default function StepErc20Approval() {
+export function isAllowanceEnough() {
+	const [sidechainNetworkId] = useAtom(formSidechainNetworkIdAtom);
+	const [amountStr] = useAtom(formAmountAtom);
+
+	const decimals = getTokenDecimals(sidechainNetworkId, "MIRA");
+	const amount = parseTokenAmount(amountStr, decimals);
+
+	const { address } = useAccount();
+
+	// 1. loading allowance
+	const {
+		data: allowance = BigNumber.from(0),
+		isLoading: isLoadingAllowance,
+		refetch: refetchAllowance,
+	} = useTokenAllowance(sidechainNetworkId, "MIRA", address ?? NIL_ADDRESS);
+	useEffect(() => {
+		refetchAllowance();
+	}, []);
+
+	return {
+		data: allowance.gte(amount),
+		isLoading: isLoadingAllowance,
+	};
+}
+
+export default function StepErc20Approval({
+	onClickNext,
+}: {
+	onClickNext?: () => void;
+}) {
 	const [sidechainNetworkId] = useAtom(formSidechainNetworkIdAtom);
 	const [amountStr] = useAtom(formAmountAtom);
 
@@ -79,7 +108,11 @@ export default function StepErc20Approval() {
 
 	const { nextStep } = useWithdrawModal();
 	const handleClickNext = () => {
-		nextStep();
+		if (onClickNext) {
+			onClickNext();
+		} else {
+			nextStep();
+		}
 	};
 
 	const isLoading = isLoadingAllowance || isLoadingSendTransaction || isMining;

@@ -1,6 +1,5 @@
 import { getNetworkNameById, useSwitchNetwork } from "@/utils/ethers";
 import { Button, Space, Text } from "@mantine/core";
-import { useAtom } from "jotai";
 import type { PropsWithChildren, ReactElement } from "react";
 import { useNetwork } from "wagmi";
 
