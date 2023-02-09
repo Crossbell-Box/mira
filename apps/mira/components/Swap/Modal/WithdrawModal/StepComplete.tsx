@@ -10,7 +10,7 @@ export default function StepComplete() {
 
 	const decimals = getTokenDecimals(
 		requestWithdrawalInfoValue.networkId,
-		"USDC"
+		"MIRA"
 	);
 	const amountStr = formatTokenAmount(
 		requestWithdrawalInfoValue.amount,
@@ -35,7 +35,7 @@ export default function StepComplete() {
 	return (
 		<div>
 			<Text my="md">
-				You have successfully requested to withdraw {amountElement} USDC.
+				You have successfully requested to withdraw {amountElement} MIRA.
 			</Text>
 
 			<Text my="md">
@@ -53,9 +53,9 @@ export default function StepComplete() {
 				<br />
 				Recipient: <Code fw="bold">{requestWithdrawalInfoValue.recipient}</Code>
 				<br />
-				Amount: {amountElement} USDC
+				Amount: {amountElement} MIRA
 				<br />
-				Claim Tip Fee: {feeElement} USDC
+				Claim Tip Fee: {feeElement} MIRA
 			</Text>
 
 			<Space h="lg" />

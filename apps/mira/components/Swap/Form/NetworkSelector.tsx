@@ -6,7 +6,7 @@ import {
 } from "../../Providers/WalletProvider/chains";
 
 export default function NetworkSelector({
-	label = "network",
+	label,
 	mode = "mainchain",
 	value,
 	onChange,
@@ -21,13 +21,17 @@ export default function NetworkSelector({
 
 	return (
 		<div>
-			<div>
-				<Input.Label>
-					<Text color="dimmed">{label}</Text>
-				</Input.Label>
-			</div>
+			{label && (
+				<>
+					<div>
+						<Input.Label>
+							<Text color="dimmed">{label}</Text>
+						</Input.Label>
+					</div>
 
-			<Space h={5} />
+					<Space h={5} />
+				</>
+			)}
 
 			<SegmentedControl
 				classNames={{ root: "w-full overflow-auto" }}

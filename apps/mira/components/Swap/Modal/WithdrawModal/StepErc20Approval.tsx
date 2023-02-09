@@ -120,8 +120,8 @@ export default function StepErc20Approval({
 	return (
 		<div>
 			<Text my="md">
-				To sell $MIRA on the {sidechainNetworkName} network, you need to approve
-				the amount of $MIRA token for the withdraw contract.
+				To swap out $MIRA on the {sidechainNetworkName} network, you need to
+				approve the amount of $MIRA token for the withdraw contract.
 			</Text>
 
 			{isLoadingAllowance ? (

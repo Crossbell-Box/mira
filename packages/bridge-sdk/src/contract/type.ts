@@ -5,6 +5,6 @@ export type ContractName =
 
 export type DepositTokenName = "MIRA";
 
-export type WithdrawTokenName = "USDC";
+export type WithdrawTokenName = "MIRA";
 
 export type TokenName = DepositTokenName | WithdrawTokenName;

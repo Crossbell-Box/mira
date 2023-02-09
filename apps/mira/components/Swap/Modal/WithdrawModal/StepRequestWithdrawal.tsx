@@ -89,8 +89,8 @@ export default function StepRequestWithdrawal() {
 	return (
 		<div>
 			<Text my="md">
-				Please click the button below to request withdrawal of {amountElement}{" "}
-				USDC.
+				Please click the button below to request swap-out of {amountElement}{" "}
+				MIRA.
 			</Text>
 
 			{requestWithdrawalTx?.hash && isMining && (

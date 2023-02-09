@@ -21,8 +21,8 @@ export default function Swap() {
 				}}
 			>
 				<Tabs.List>
-					<Tabs.Tab value="deposit">Deposit</Tabs.Tab>
-					<Tabs.Tab value="withdraw">Withdraw</Tabs.Tab>
+					<Tabs.Tab value="deposit">Swap In</Tabs.Tab>
+					<Tabs.Tab value="withdraw">Swap Out</Tabs.Tab>
 				</Tabs.List>
 
 				<Tabs.Panel value="deposit" pt="xs">

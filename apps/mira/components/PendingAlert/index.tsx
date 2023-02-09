@@ -31,7 +31,7 @@ export default function PendingAlert() {
 								<span className="font-bold">
 									{pendingRequestWithdrawalCount}
 								</span>{" "}
-								pending withdrawal
+								pending swap-outs
 								{pendingRequestWithdrawalCount > 1 && "s"}
 							</>
 						)}
@@ -42,7 +42,7 @@ export default function PendingAlert() {
 								<span className="font-bold">
 									{pendingRequestDepositCount}
 								</span>{" "}
-								pending deposit
+								pending swap-ins
 								{pendingRequestDepositCount > 1 && "s"}
 							</>
 						)}

@@ -1,4 +1,4 @@
-import { MiraLogo, UsdcLogo } from "@/components/Logo";
+import { MiraLogo } from "@/components/Logo";
 import { Box, Group, Select, Text } from "@mantine/core";
 import { forwardRef, ReactElement, useState } from "react";
 
@@ -9,7 +9,8 @@ interface ItemProps extends React.ComponentPropsWithoutRef<"div"> {
 }
 
 const depositFromTokens: ItemProps[] = [
-	{ label: "USDC", value: "USDC", icon: <UsdcLogo height={20} width={20} /> },
+	// { label: "USDC", value: "USDC", icon: <UsdcLogo height={20} width={20} /> },
+	{ label: "MIRA", value: "MIRA", icon: <MiraLogo height={20} width={20} /> },
 ];
 
 const depositToTokens: ItemProps[] = [
@@ -66,6 +67,7 @@ export default function TokenSelector({ mode }: TokenSelectorProps) {
 			transition="pop-top-left"
 			transitionDuration={80}
 			transitionTimingFunction="ease"
+			readOnly
 		/>
 	);
 }

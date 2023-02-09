@@ -1,4 +1,4 @@
-import { Button, Space, Text } from "@mantine/core";
+import { Button, Divider, Space, Text } from "@mantine/core";
 import { useAtom } from "jotai";
 import BigNumberInput from "./BigNumberInput";
 import NetworkSelector from "./NetworkSelector";
@@ -14,6 +14,7 @@ import { useWithdrawModal } from "../Modal/WithdrawModal";
 import MaxPayCalculator, {
 	useIsAmountLargerThanBalance,
 } from "./MaxPayCalculator";
+import { IconArrowDown } from "@tabler/icons-react";
 
 export default function Form({
 	mode = "deposit",
@@ -30,7 +31,6 @@ export default function Form({
 	const renderMainchainNetworkSelector = () => {
 		return (
 			<NetworkSelector
-				label="From"
 				mode="mainchain"
 				value={mainchain}
 				onChange={(v) => setMainchain(v)}
@@ -41,7 +41,6 @@ export default function Form({
 	const renderSidechainNetworkSelector = () => {
 		return (
 			<NetworkSelector
-				label="On"
 				mode="sidechain"
 				value={sidechain}
 				onChange={(v) => setSidechain(v)}
@@ -72,6 +71,9 @@ export default function Form({
 
 	return (
 		<div>
+			{/* from */}
+
+			<Space h={10} />
 			<BigNumberInput
 				mode={mode === "deposit" ? "depositFrom" : "withdrawFrom"}
 				value={value}
@@ -84,25 +86,28 @@ export default function Form({
 				? renderMainchainNetworkSelector()
 				: renderSidechainNetworkSelector()}
 
-			<Space h={20} />
+			{/* to icon */}
 
-			<BigNumberInput
+			<div>
+				<Space h={20} />
+				<Divider label={<IconArrowDown />} labelPosition="center"></Divider>
+				<Space h={20} />
+			</div>
+
+			{/* to */}
+
+			{/* <BigNumberInput
 				mode={mode === "deposit" ? "depositTo" : "withdrawTo"}
 				value={value}
 				onChange={(v) => setValue(v)}
 			/>
-			<Space h={10} />
+			<Space h={10} /> */}
 			{mode === "deposit"
 				? renderSidechainNetworkSelector()
 				: renderMainchainNetworkSelector()}
-
 			<Space h={20} />
 
-			<Text color="dimmed" size="xs">
-				{mode === "deposit" ? "1 USDC = 1 MIRA" : "1 MIRA = 1 USDC"}
-			</Text>
-
-			<Space h={20} />
+			{/* submit */}
 
 			<Button
 				fullWidth
@@ -110,7 +115,7 @@ export default function Form({
 				onClick={openModal}
 				disabled={submitBtnDisabled}
 			>
-				{mode === "deposit" ? "Buy $MIRA" : "Sell $MIRA"}
+				{mode === "deposit" ? "Swap $MIRA" : "Swap $MIRA"}
 			</Button>
 		</div>
 	);

@@ -33,7 +33,7 @@ const App = (props: AppPropsWithLayout) => {
 				/>
 				<meta
 					name="description"
-					content="$MIRA is a cryptocurrency, a decentralized stablecoin that is backed by Crossbell."
+					content="$MIRA is a cryptocurrency that is backed by Crossbell."
 				/>
 				<link rel="shortcut icon" href="/favicon.ico" />
 
@@ -43,7 +43,7 @@ const App = (props: AppPropsWithLayout) => {
 						url: "https://mira.crossbell.io/",
 						siteName: "$MIRA",
 						description:
-							"$MIRA is a cryptocurrency, a decentralized stablecoin that is backed by Crossbell.",
+							"$MIRA is a cryptocurrency that is backed by Crossbell.",
 						images: [
 							{
 								url: "https://mira.crossbell.io/og.jpg",

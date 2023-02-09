@@ -5,12 +5,12 @@ export function useDepositModal() {
 	const open = () =>
 		openModal({
 			centered: true,
-			title: "Deposit",
+			title: "Swap In",
 			closeOnClickOutside: false,
 			size: "xl",
 			children: (
 				<>
-					Great that you are interested in $MIRA. Deposit is invite-only for
+					Great that you are interested in $MIRA. Swap-In is invite-only for
 					now. Reach out to us on{" "}
 					<Link
 						href="https://discord.gg/4GCwDsruyj"

@@ -21,7 +21,7 @@ export default function StepSwitchMainchainNetwork() {
 			onClickNext={nextStep}
 			description={
 				<>
-					To withdraw $USDC on the {NetworkName} network, you need to claim it.
+					To withdraw $MIRA on the {NetworkName} network, you need to claim it.
 				</>
 			}
 		/>

@@ -20,7 +20,7 @@ export default function StepClaim() {
 	const amount = requestWithdrawalInfoValue.amount;
 	const decimals = getTokenDecimals(
 		requestWithdrawalInfoValue.networkId,
-		"USDC"
+		"MIRA"
 	);
 	const amountStr = formatTokenAmount(amount, decimals);
 
@@ -125,7 +125,7 @@ export default function StepClaim() {
 				<br />
 				Recipient: <Code fw="bold">{withdrawalEntry?.recipient ?? "..."}</Code>
 				<br />
-				Amount: {amountElement} USDC
+				Amount: {amountElement} MIRA
 				<br />
 			</Text>
 

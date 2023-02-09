@@ -9,7 +9,7 @@ export default function ContactButton() {
 
 	return (
 		<Affix position={{ bottom: isLargerThanSm ? 20 : 60, right: 20 }}>
-			<Tooltip position="left" label="Ask us on Discord">
+			<Tooltip position="left" label="Join us on Discord">
 				<ActionIcon
 					variant="filled"
 					size="xl"

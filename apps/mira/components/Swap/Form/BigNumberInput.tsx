@@ -78,21 +78,12 @@ export default function BigNumberInput({
 		}
 	};
 
-	const labelTexMapping: Record<typeof mode, string> = {
-		depositFrom: "You pay",
-		depositTo: "You receive",
-		withdrawFrom: "You sell",
-		withdrawTo: "You receive",
-	};
-	const label = labelTexMapping[mode];
-
 	return (
 		<TextInput
 			classNames={{
 				input: "text-2xl font-bold py-6",
 				label: "mb-2",
 			}}
-			label={label}
 			inputMode="decimal"
 			type="text"
 			size="md"

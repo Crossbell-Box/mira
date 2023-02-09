@@ -15,7 +15,7 @@ export function getTokenDecimals(
 	networkId: number,
 	tokenNameOrAddress: TokenName | string
 ): number {
-	let tokenName: TokenName | undefined;
+	let tokenName: TokenName | null;
 	if (tokenNameOrAddress.startsWith("0x")) {
 		tokenName = getTokenName(networkId, tokenNameOrAddress);
 	} else {

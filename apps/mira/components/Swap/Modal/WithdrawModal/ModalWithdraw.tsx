@@ -20,7 +20,7 @@ export default function ModalWithdraw() {
 				<Stepper.Step label="Second step" description="Approve token">
 					<StepErc20Approval />
 				</Stepper.Step>
-				<Stepper.Step label="Third step" description="Request withdrawal">
+				<Stepper.Step label="Third step" description="Request swaps">
 					<StepRequestWithdrawal />
 				</Stepper.Step>
 				<Stepper.Step label="Fifth step" description="Switch network">

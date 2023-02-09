@@ -18,7 +18,7 @@ import { getMainchainGatewayContractConfig } from "../config";
  */
 export function useGetDailyWithdrawalMaxQuota(
 	networkId: number,
-	tokenName: WithdrawTokenName = "USDC"
+	tokenName: WithdrawTokenName = "MIRA"
 ) {
 	return useContractRead({
 		...getMainchainGatewayContractConfig(networkId),
@@ -33,7 +33,7 @@ export function useGetDailyWithdrawalMaxQuota(
  */
 export function useGetDailyWithdrawalRemainingQuota(
 	networkId: number,
-	tokenName: WithdrawTokenName = "USDC"
+	tokenName: WithdrawTokenName = "MIRA"
 ) {
 	return useContractRead({
 		...getMainchainGatewayContractConfig(networkId),

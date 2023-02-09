@@ -21,8 +21,8 @@ export default function StepSwitchSidechainNetwork() {
 			onClickNext={nextStep}
 			description={
 				<>
-					To sell $MIRA on the {NetworkName} network, you need to approve the
-					$MIRA token for the withdraw contract.
+					To swap out $MIRA on the {NetworkName} network, you need to approve
+					the $MIRA token for the withdraw contract.
 				</>
 			}
 		/>

@@ -56,7 +56,7 @@ export function useWithdrawModal({
 			modalId: withdrawModalId,
 			centered: true,
 			closeOnClickOutside: false,
-			title: "Withdraw",
+			title: "Swap Out",
 			size: "xl",
 			children: <ModalWithdraw />,
 			onClose: () => {
