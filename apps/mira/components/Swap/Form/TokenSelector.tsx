@@ -64,9 +64,9 @@ export default function TokenSelector({ mode }: TokenSelectorProps) {
 			onChange={(e) => setSelected(e ?? selected)}
 			icon={data.find((item) => item.value === selected)?.icon}
 			itemComponent={SelectItem}
-			transition="pop-top-left"
-			transitionDuration={80}
-			transitionTimingFunction="ease"
+			// transition="pop-top-left"
+			// transitionDuration={80}
+			// transitionTimingFunction="ease"
 			readOnly
 		/>
 	);

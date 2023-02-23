@@ -1,3 +1,4 @@
+import { useConfirmedBlockNumber } from "@/utils/contract";
 import { handleTransactionSuccess } from "@/utils/contract/base";
 import { useRequestWithdrawal } from "@/utils/contract/CrossbellGateway";
 import { NIL_ADDRESS } from "@/utils/ethers/constants";
@@ -53,10 +54,12 @@ export default function StepRequestWithdrawal() {
 			const amount = event.args.amount;
 			const fee = event.args.fee;
 			const transactionHash = data.transactionHash;
+			const blockNumber = data.blockNumber;
 			setRequestWithdrawalInfo({
 				networkId,
 				withdrawalId,
 				transactionHash,
+				blockNumber,
 				recipient,
 				amount,
 				fee,
@@ -65,6 +68,17 @@ export default function StepRequestWithdrawal() {
 			handleTransactionSuccess(data);
 		},
 	});
+
+	// 3. Wait for confirmations
+	const {
+		isLoading: isLoadingConfirmation,
+		confirmations,
+		neededConfirmations,
+		satisfied: confirmationsSatisfied,
+	} = useConfirmedBlockNumber(
+		sidechainNetworkId,
+		requestWithdrawalInfoValue.blockNumber
+	);
 
 	const handleClickRequest = () => {
 		write?.();
@@ -83,8 +97,12 @@ export default function StepRequestWithdrawal() {
 
 	const txHash = <Code fw="bold">{requestWithdrawalTx?.hash}</Code>;
 
-	const hasAlreadyMined = requestWithdrawalInfoValue.transactionHash; // when recovering from history
-	const isSuccess = hasAlreadyMined || (isSuccessSendTransaction && isMined);
+	const hasAlreadyMined = Boolean(requestWithdrawalInfoValue.transactionHash); // when recovering from history
+	const isSuccess =
+		hasAlreadyMined ||
+		(isSuccessSendTransaction && isMined && confirmationsSatisfied);
+	const isLoading =
+		isLoadingSendTransaction || isMining || isLoadingConfirmation;
 
 	return (
 		<div>
@@ -113,6 +131,14 @@ export default function StepRequestWithdrawal() {
 				</Text>
 			)}
 
+			{Boolean(requestWithdrawalInfoValue.blockNumber) &&
+				isLoadingConfirmation && (
+					<Text my="md">
+						<Loader size="xs" /> Waiting for confirmations... {confirmations}/
+						{neededConfirmations}
+					</Text>
+				)}
+
 			<Space h="lg" />
 
 			{isSuccess ? (
@@ -124,11 +150,12 @@ export default function StepRequestWithdrawal() {
 					fullWidth
 					size="lg"
 					onClick={handleClickRequest}
-					loading={isLoadingSendTransaction || isMining}
+					loading={isLoading}
 				>
 					{isLoadingSendTransaction && "Please Approve in Your Wallet..."}
 					{isMining && "Mining Transaction..."}
-					{!isLoadingSendTransaction && !isMining && "Request Withdrawal"}
+					{isLoadingConfirmation && "Waiting for Confirmation..."}
+					{!isLoading && "Request Withdrawal"}
 				</Button>
 			)}
 		</div>

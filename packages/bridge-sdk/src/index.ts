@@ -11,3 +11,4 @@ export {
 } from "./contract/token";
 export { parseLog } from "./contract/log";
 export { recoverSignatures } from "./contract/sign";
+export { getNeededConfirmations } from "./contract/confirmations";

@@ -13,7 +13,7 @@
 		"@ethersproject/bytes": "^5.7.0",
 		"@ethersproject/providers": "^5.7.2",
 		"@typechain/ethers-v5": "^10.2.0",
-		"eslint": "^8.33.0",
+		"eslint": "^8.34.0",
 		"eslint-config-custom": "workspace:*",
 		"tsconfig": "workspace:*",
 		"typechain": "^8.1.1",

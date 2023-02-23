@@ -1,4 +1,4 @@
-import { useWithdraw } from "@/utils/contract";
+import { useConfirmedBlockNumber, useWithdraw } from "@/utils/contract";
 import { handleTransactionSuccess } from "@/utils/contract/base";
 import {
 	useGetWithdrawalEntry,
@@ -82,6 +82,17 @@ export default function StepClaim() {
 		},
 	});
 
+	// 7. Wait for confirmations
+	const {
+		isLoading: isLoadingConfirmation,
+		confirmations,
+		neededConfirmations,
+		satisfied: confirmationsSatisfied,
+	} = useConfirmedBlockNumber(
+		requestWithdrawalInfoValue.networkId,
+		requestWithdrawalInfoValue.blockNumber
+	);
+
 	const handleClickWithdraw = () => {
 		write?.();
 	};
@@ -108,8 +119,10 @@ export default function StepClaim() {
 		isLoadingValidatorNumbers ||
 		isLoadingWithdrawalSignature ||
 		isLoadingSendTransaction ||
-		isMining;
-	const isSuccess = isSuccessSendTransaction && isMined;
+		isMining ||
+		isLoadingConfirmation;
+	const isSuccess =
+		isSuccessSendTransaction && isMined && confirmationsSatisfied;
 
 	return (
 		<div>
@@ -148,6 +161,14 @@ export default function StepClaim() {
 				<Text my="md">✅ Your transaction hash is {txHash}.</Text>
 			)}
 
+			{Boolean(requestWithdrawalInfoValue.blockNumber) &&
+				isLoadingConfirmation && (
+					<Text my="md">
+						<Loader size="xs" /> Waiting for confirmations... {confirmations}/
+						{neededConfirmations}
+					</Text>
+				)}
+
 			<Space h="lg" />
 
 			{isSuccess ? (
@@ -164,6 +185,7 @@ export default function StepClaim() {
 				>
 					{isLoadingSendTransaction && "Please Approve in Your Wallet..."}
 					{isMining && "Mining Transaction..."}
+					{isLoadingConfirmation && "Waiting for Confirmations..."}
 					{!isLoading && "Withdraw"}
 				</Button>
 			)}
