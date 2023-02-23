@@ -74,7 +74,7 @@ export default function StepRequestWithdrawal() {
 		isLoading: isLoadingConfirmation,
 		confirmations,
 		neededConfirmations,
-		satisfied: confirmationsSatisfied,
+		satisfied: isConfirmationsSatisfied,
 	} = useConfirmedBlockNumber(
 		sidechainNetworkId,
 		requestWithdrawalInfoValue.blockNumber
@@ -100,9 +100,10 @@ export default function StepRequestWithdrawal() {
 	const hasAlreadyMined = Boolean(requestWithdrawalInfoValue.transactionHash); // when recovering from history
 	const isSuccess =
 		hasAlreadyMined ||
-		(isSuccessSendTransaction && isMined && confirmationsSatisfied);
+		(isSuccessSendTransaction && isMined && isConfirmationsSatisfied);
 	const isLoading =
 		isLoadingSendTransaction || isMining || isLoadingConfirmation;
+	const isBtnDisabled = !isConfirmationsSatisfied;
 
 	return (
 		<div>
@@ -151,10 +152,10 @@ export default function StepRequestWithdrawal() {
 					size="lg"
 					onClick={handleClickRequest}
 					loading={isLoading}
+					disabled={isBtnDisabled}
 				>
 					{isLoadingSendTransaction && "Please Approve in Your Wallet..."}
 					{isMining && "Mining Transaction..."}
-					{isLoadingConfirmation && "Waiting for Confirmation..."}
 					{!isLoading && "Request Withdrawal"}
 				</Button>
 			)}

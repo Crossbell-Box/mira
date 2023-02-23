@@ -1,4 +1,9 @@
-import { useConfirmedBlockNumber, useWithdraw } from "@/utils/contract";
+import {
+	useConfirmedBlockNumber,
+	useGetDailyWithdrawalMaxQuota,
+	useGetDailyWithdrawalRemainingQuota,
+	useWithdraw,
+} from "@/utils/contract";
 import { handleTransactionSuccess } from "@/utils/contract/base";
 import {
 	useGetWithdrawalEntry,
@@ -23,6 +28,13 @@ export default function StepClaim() {
 		"MIRA"
 	);
 	const amountStr = formatTokenAmount(amount, decimals);
+
+	// 0. check daily withdrawal quota
+	const { data: maxQuota, isLoading: isLoadingMaxQuota } =
+		useGetDailyWithdrawalMaxQuota(requestWithdrawalInfoValue.networkId);
+	const { data: remainingQuota, isLoading: isLoadingRemainingQuota } =
+		useGetDailyWithdrawalRemainingQuota(requestWithdrawalInfoValue.networkId);
+	const isExceedQuota = remainingQuota?.lt(amount);
 
 	// 1. get withdrawal entry
 	const { data: withdrawalEntry, isLoading: isLoadingWithdrawalEntry } =
@@ -87,7 +99,7 @@ export default function StepClaim() {
 		isLoading: isLoadingConfirmation,
 		confirmations,
 		neededConfirmations,
-		satisfied: confirmationsSatisfied,
+		satisfied: isConfirmationsSatisfied,
 	} = useConfirmedBlockNumber(
 		requestWithdrawalInfoValue.networkId,
 		requestWithdrawalInfoValue.blockNumber
@@ -110,9 +122,13 @@ export default function StepClaim() {
 
 	const txHash = <Code fw="bold">{withdrawTx?.hash}</Code>;
 
-	const isLtRequriedValidatorNumber =
+	const isLtRequiredValidatorNumber =
 		(withdrawalSignature?.signers.length ?? 0) < requiredValidatorNumber;
-	const isBtnDisabled = isLtRequriedValidatorNumber;
+	const isBtnDisabled =
+		isLtRequiredValidatorNumber ||
+		!isConfirmationsSatisfied ||
+		isLoadingRemainingQuota ||
+		isExceedQuota;
 
 	const isLoading =
 		isLoadingWithdrawalEntry ||
@@ -120,9 +136,11 @@ export default function StepClaim() {
 		isLoadingWithdrawalSignature ||
 		isLoadingSendTransaction ||
 		isMining ||
-		isLoadingConfirmation;
+		isLoadingConfirmation ||
+		isLoadingMaxQuota ||
+		isLoadingRemainingQuota;
 	const isSuccess =
-		isSuccessSendTransaction && isMined && confirmationsSatisfied;
+		isSuccessSendTransaction && isMined && isConfirmationsSatisfied;
 
 	return (
 		<div>
@@ -142,11 +160,20 @@ export default function StepClaim() {
 				<br />
 			</Text>
 
-			{isLtRequriedValidatorNumber && (
+			{isLtRequiredValidatorNumber && (
 				<Text my="md">
 					<Loader size="xs" /> [{withdrawalSignature?.signers.length ?? "..."} /{" "}
 					{requiredValidatorNumber}] Waiting for more validators to sign. You
 					are able to withdraw after the required number of validators sign.
+				</Text>
+			)}
+
+			{remainingQuota && maxQuota && isExceedQuota && (
+				<Text my="md">
+					Sorry. You have exceeded the daily withdrawal quota (
+					{formatTokenAmount(remainingQuota, decimals)}/
+					{formatTokenAmount(maxQuota, decimals)} MIRA left). Please contact us
+					or wait until tomorrow.
 				</Text>
 			)}
 
@@ -185,7 +212,6 @@ export default function StepClaim() {
 				>
 					{isLoadingSendTransaction && "Please Approve in Your Wallet..."}
 					{isMining && "Mining Transaction..."}
-					{isLoadingConfirmation && "Waiting for Confirmations..."}
 					{!isLoading && "Withdraw"}
 				</Button>
 			)}
