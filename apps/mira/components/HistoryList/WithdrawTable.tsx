@@ -155,6 +155,7 @@ export default function WithdrawalTable() {
 				formAmount: formattedTokenAmount,
 				requestWithdrawalInfo: {
 					transactionHash: o.transaction,
+					blockNumber: 0, // we don't need this
 					networkId: Number(o.mainchain_id),
 					withdrawalId: Number(o.withdrawal_id),
 					amount: BigNumber.from(o.token_quantity),
