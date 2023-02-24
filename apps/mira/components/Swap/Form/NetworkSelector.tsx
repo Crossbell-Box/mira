@@ -34,8 +34,7 @@ export default function NetworkSelector({
 			)}
 
 			<SegmentedControl
-				classNames={{ root: "w-full overflow-auto" }}
-				styles={{ root: { width: "100%" } }}
+				styles={{ root: { width: "100%", overflow: "auto" } }}
 				{...props}
 				data={chains.map((chain) => ({
 					label: chain.name,
