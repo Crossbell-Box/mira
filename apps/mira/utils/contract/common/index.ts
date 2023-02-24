@@ -14,7 +14,7 @@ export function useConfirmedBlockNumber(
 	const neededConfirmations = getNeededConfirmations(chainId);
 
 	if (data && currentBlockNumber) {
-		data = data - currentBlockNumber;
+		data = currentBlockNumber - data;
 	}
 
 	return {

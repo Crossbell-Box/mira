@@ -155,7 +155,7 @@ export default function WithdrawalTable() {
 				formAmount: formattedTokenAmount,
 				requestWithdrawalInfo: {
 					transactionHash: o.transaction,
-					blockNumber: 0, // we don't need this
+					blockNumber: Number.POSITIVE_INFINITY, // this is only used to calculate confirmation; if a data is in history, it's already confirmed
 					networkId: Number(o.mainchain_id),
 					withdrawalId: Number(o.withdrawal_id),
 					amount: BigNumber.from(o.token_quantity),
