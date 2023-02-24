@@ -43,7 +43,7 @@ export const CONTRACT_ADDRESS = {
 		},
 		goerli: {
 			address: "0xC4026Bc7c9b5988574b07280d9816BC4591B4C62",
-			decimals: 18,
+			decimals: 6,
 		},
 		polygonMumbai: {
 			address: "0xC9Ec9d8b6C570cf7D594c6E1F407285bC57BF5b2",
