@@ -74,7 +74,8 @@ export function useGetWithdrawalSignature(
 		args: [BigNumber.from(targetNetworkId), BigNumber.from(withdrawalId)],
 		chainId: crossbellChain.id,
 		onError: handleContractError,
-		cacheOnBlock: true,
+		// cacheOnBlock: true,
+		watch: true,
 		onSuccess: async (data) => {
 			if (data.signers.length < requiredNumber) {
 				await new Promise((resolve) => setTimeout(resolve, 3000)); // wait 3 seconds

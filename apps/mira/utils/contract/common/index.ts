@@ -3,24 +3,25 @@ import { useBlockNumber } from "wagmi";
 
 export function useConfirmedBlockNumber(
 	chainId: number,
-	currentBlockNumber?: number
+	txBlockNumber?: number
 ) {
-	let { data, ...props } = useBlockNumber({
+	let { data: currentBlockNumber, ...props } = useBlockNumber({
 		chainId,
 		watch: true,
-		enabled: Boolean(currentBlockNumber),
+		enabled: Boolean(txBlockNumber),
 	});
 
 	const neededConfirmations = getNeededConfirmations(chainId);
 
-	if (data && currentBlockNumber) {
-		data = currentBlockNumber - data;
+	let confirmations: number | undefined;
+	if (currentBlockNumber && txBlockNumber) {
+		confirmations = currentBlockNumber - txBlockNumber;
 	}
 
 	return {
-		confirmations: data,
+		confirmations,
 		neededConfirmations,
-		satisfied: data && data >= neededConfirmations,
+		satisfied: currentBlockNumber && currentBlockNumber >= neededConfirmations,
 		...props,
 	};
 }

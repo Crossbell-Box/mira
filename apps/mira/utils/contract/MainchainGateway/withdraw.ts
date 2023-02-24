@@ -57,7 +57,14 @@ export function useWithdraw(
 		v: number;
 		r: `0x${string}`;
 		s: `0x${string}`;
-	}[] = []
+	}[] = [],
+	{
+		enabled = true,
+		onOldWithdrawal = () => {},
+	}: {
+		enabled?: boolean;
+		onOldWithdrawal?: () => void;
+	} = {}
 ) {
 	const { config, error: prepareError } = usePrepareContractWrite({
 		...getMainchainGatewayContractConfig(targetNetworkId),
@@ -72,8 +79,18 @@ export function useWithdraw(
 			signatures,
 		],
 		chainId: targetNetworkId,
-		onError: handleContractError,
-		enabled: signatures.length > 0,
+		onError: (e) => {
+			if (
+				// @ts-ignore
+				e.error.data.originalError.message ===
+				"execution reverted: NotNewWithdrawal"
+			) {
+				onOldWithdrawal();
+			} else {
+				handleContractError(e);
+			}
+		},
+		enabled: signatures.length > 0 && enabled,
 	});
 
 	const contract = useContractWrite(config);

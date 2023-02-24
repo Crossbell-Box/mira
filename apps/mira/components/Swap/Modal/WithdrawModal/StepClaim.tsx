@@ -17,6 +17,7 @@ import {
 } from "@crossbell/bridge-sdk";
 import { Button, Code, Loader, Space, Text } from "@mantine/core";
 import { useAtom } from "jotai";
+import { useState } from "react";
 import { useWaitForTransaction } from "wagmi";
 import { requestWithdrawalInfo, step, withdrawalInfo } from "./store";
 
@@ -64,6 +65,8 @@ export default function StepClaim() {
 	);
 
 	// 5. withdraw
+	const [withdrawalInfoValue, setWithdrawalInfo] = useAtom(withdrawalInfo);
+	const [isOldWithdrawalError, setIsOldWithdrawalError] = useState(false);
 	const {
 		data: withdrawTx,
 		isLoading: isLoadingSendTransaction,
@@ -76,14 +79,22 @@ export default function StepClaim() {
 		withdrawalEntry?.token,
 		withdrawalEntry?.amount,
 		withdrawalEntry?.fee,
-		signs
+		signs,
+		{
+			enabled: !withdrawalInfoValue.transactionHash,
+			onOldWithdrawal() {
+				setIsOldWithdrawalError(true);
+			},
+		}
 	);
 
 	// 6. wait for transaction
-	const [withdrawalInfoValue, setWithdrawalInfo] = useAtom(withdrawalInfo);
+	const existedHash = !!withdrawalInfoValue.transactionHash
+		? (withdrawalInfoValue.transactionHash as `0x${string}`)
+		: undefined;
 	const { isLoading: isMining, isSuccess: isMined } = useWaitForTransaction({
 		chainId: requestWithdrawalInfoValue.networkId,
-		hash: withdrawTx?.hash,
+		hash: existedHash ?? withdrawTx?.hash,
 		onSuccess: (data) => {
 			const transactionHash = data.transactionHash;
 			setWithdrawalInfo({
@@ -128,7 +139,8 @@ export default function StepClaim() {
 		isLtRequiredValidatorNumber ||
 		!isConfirmationsSatisfied ||
 		isLoadingRemainingQuota ||
-		isExceedQuota;
+		isExceedQuota ||
+		isOldWithdrawalError;
 
 	const isLoading =
 		isLoadingWithdrawalEntry ||
@@ -195,6 +207,13 @@ export default function StepClaim() {
 						{neededConfirmations}
 					</Text>
 				)}
+
+			{isOldWithdrawalError && (
+				<Text my="md">
+					This withdrawal has already been processed. Please refresh the page to
+					continue.
+				</Text>
+			)}
 
 			<Space h="lg" />
 
