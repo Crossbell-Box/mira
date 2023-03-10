@@ -15,6 +15,7 @@ import MaxPayCalculator, {
 	useIsAmountLargerThanBalance,
 } from "./MaxPayCalculator";
 import { IconArrowDown } from "@tabler/icons-react";
+import { BigNumber } from "ethers";
 
 export default function Form({
 	mode = "deposit",
@@ -66,8 +67,11 @@ export default function Form({
 	const isAmountLargerThanBalance =
 		useIsAmountLargerThanBalance() && mode === "withdraw";
 
+	const isAmountLargerThanZero = value && BigNumber.from(value).gt(0);
 	const submitBtnDisabled =
-		!value || (isConnected && isAmountLargerThanBalance);
+		!value ||
+		(isConnected && isAmountLargerThanBalance) ||
+		!isAmountLargerThanZero;
 
 	return (
 		<div>
