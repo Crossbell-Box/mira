@@ -43,7 +43,7 @@ importers:
       ethers: ^5.7.2
       framer-motion: ^10.2.3
       jotai: ^2.0.3
-      mantine-react-table: ^0.9.4
+      mantine-react-table: 0.9.3
       next: ^13.2.3
       next-seo: ^5.15.0
       postcss: ^8.4.21
@@ -79,7 +79,7 @@ importers:
       ethers: 5.7.2
       framer-motion: 10.2.3_biqbaboplfbrettd7655fr4n2y
       jotai: 2.0.3_react@18.2.0
-      mantine-react-table: 0.9.4_w6xmlfmxicmhgo35lqmwgieoam
+      mantine-react-table: 0.9.3_w6xmlfmxicmhgo35lqmwgieoam
       next: 13.2.3_6m24vuloj5ihw4zc5lbsktc4fu
       next-seo: 5.15.0_nvzgbose6yf6w7ijjprgspqefi
       react: 18.2.0
@@ -5300,8 +5300,8 @@ packages:
     resolution: {integrity: sha512-s8UhlNe7vPKomQhC1qFelMokr/Sc3AgNbso3n74mVPA5LTZwkB9NlXf4XPamLxJE8h0gh73rM94xvwRT2CVInw==}
     dev: false
 
-  /mantine-react-table/0.9.4_w6xmlfmxicmhgo35lqmwgieoam:
-    resolution: {integrity: sha512-zkHIiryU+KSJ8RNsdMUHjkBKtSvcuF/3I/UEGNKYjli0VMeve/tS7WYrOhbgkZIZgTuHOO5boBTz6RRi4+zdZg==}
+  /mantine-react-table/0.9.3_w6xmlfmxicmhgo35lqmwgieoam:
+    resolution: {integrity: sha512-btMCV6ZPSYJBPnAlFd10EEuWjRuF7fEGN0Dqqob9yu8vbjRgIqUWk0+yuO+qIxP91z+q6q87o+ljURNzmUsvhw==}
     engines: {node: '>=14'}
     peerDependencies:
       '@emotion/react': '>=11'
