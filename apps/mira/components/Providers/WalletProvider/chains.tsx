@@ -23,7 +23,13 @@ const crossbell: Chain & {
 	// logo: <BellLogo />,
 };
 
-export const prodMainChains: Chain[] = [mainnet, polygon, bsc];
+// prod
+
+export const prodMainChains: Chain[] = [
+	// mainnet,
+	polygon,
+	//bsc
+];
 export const prodCrossbellChain = crossbell;
 export const prodChains: Chain[] = [mainnet, polygon, bsc, crossbell];
 
@@ -32,6 +38,8 @@ export const prodChains: Chain[] = [mainnet, polygon, bsc, crossbell];
 export const devMainChains: Chain[] = [goerli, polygonMumbai, bscTestnet];
 export const devCrossbellChain = sepolia;
 export const devChains: Chain[] = [goerli, polygonMumbai, bscTestnet, sepolia];
+
+// composed
 
 export const mainChains = isProd() ? prodMainChains : devMainChains;
 export const crossbellChain = isProd() ? prodCrossbellChain : devCrossbellChain;

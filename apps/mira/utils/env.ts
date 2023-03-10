@@ -1,5 +1,5 @@
 const forceProd = false;
-const forceDev = true;
+const forceDev = false;
 export function isProd() {
 	if (forceDev) return false;
 	if (forceProd) return true;
