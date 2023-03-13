@@ -44,6 +44,9 @@ export default function MaxPayCalculator() {
 
 	const [amount, setAmount] = useAtom(formAmountAtom);
 	const handleClickMax = () => {
+		if (balanceStr === "0.0") {
+			return;
+		}
 		setAmount(balanceStr);
 	};
 
