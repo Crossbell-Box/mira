@@ -13,6 +13,7 @@ import { useModal } from "connectkit";
 import { useWithdrawModal } from "../Modal/WithdrawModal";
 import MaxPayCalculator, {
 	useIsAmountLargerThanBalance,
+	useIsAmountLargerThanZero,
 } from "./MaxPayCalculator";
 import { IconArrowDown } from "@tabler/icons-react";
 import { BigNumber } from "ethers";
@@ -67,7 +68,7 @@ export default function Form({
 	const isAmountLargerThanBalance =
 		useIsAmountLargerThanBalance() && mode === "withdraw";
 
-	const isAmountLargerThanZero = value && BigNumber.from(value).gt(0);
+	const isAmountLargerThanZero = useIsAmountLargerThanZero();
 	const submitBtnDisabled =
 		!value ||
 		(isConnected && isAmountLargerThanBalance) ||

@@ -30,6 +30,16 @@ export function useIsAmountLargerThanBalance() {
 	return isAmountLargerThanBalance;
 }
 
+export function useIsAmountLargerThanZero() {
+	const [amount] = useAtom(formAmountAtom);
+	const [sidechainNetworkId] = useAtom(formSidechainNetworkIdAtom);
+	const decimals = getTokenDecimals(sidechainNetworkId, "MIRA");
+	const isAmountLargerThanZero =
+		Boolean(amount) && parseTokenAmount(amount, decimals).gt(0);
+
+	return isAmountLargerThanZero;
+}
+
 export default function MaxPayCalculator() {
 	const { address, isConnected } = useAccount();
 	const [sidechainNetworkId] = useAtom(formSidechainNetworkIdAtom);
@@ -44,9 +54,6 @@ export default function MaxPayCalculator() {
 
 	const [amount, setAmount] = useAtom(formAmountAtom);
 	const handleClickMax = () => {
-		if (balanceStr === "0.0") {
-			return;
-		}
 		setAmount(balanceStr);
 	};
 
