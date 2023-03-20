@@ -6,7 +6,8 @@ export function handleContractError(e: Error) {
 	showNotification({
 		color: "red",
 		title: "Error",
-		message: e.message,
+		// @ts-ignore
+		message: e.error?.data?.originalError?.message ?? e.message,
 	});
 }
 
