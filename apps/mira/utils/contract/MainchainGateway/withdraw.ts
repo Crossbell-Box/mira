@@ -82,7 +82,7 @@ export function useWithdraw(
 		onError: (e) => {
 			if (
 				// @ts-ignore
-				e.error.data.originalError.message ===
+				e.error.data.originalError?.message ===
 				"execution reverted: NotNewWithdrawal"
 			) {
 				onOldWithdrawal();

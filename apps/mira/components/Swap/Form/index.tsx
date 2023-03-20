@@ -1,4 +1,4 @@
-import { Button, Divider, Space, Text } from "@mantine/core";
+import { Button, Divider, Space } from "@mantine/core";
 import { useAtom } from "jotai";
 import BigNumberInput from "./BigNumberInput";
 import NetworkSelector from "./NetworkSelector";
@@ -16,7 +16,6 @@ import MaxPayCalculator, {
 	useIsAmountLargerThanZero,
 } from "./MaxPayCalculator";
 import { IconArrowDown } from "@tabler/icons-react";
-import { BigNumber } from "ethers";
 
 export default function Form({
 	mode = "deposit",
