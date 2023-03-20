@@ -2,6 +2,7 @@ import { showNotification } from "@mantine/notifications";
 import type { providers } from "ethers";
 
 export function handleContractError(e: Error) {
+	console.error(e);
 	showNotification({
 		color: "red",
 		title: "Error",
