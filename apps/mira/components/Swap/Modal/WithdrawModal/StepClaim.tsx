@@ -175,8 +175,9 @@ export default function StepClaim() {
 			{isLtRequiredValidatorNumber && (
 				<Text my="md">
 					<Loader size="xs" /> [{withdrawalSignature?.signers.length ?? "..."} /{" "}
-					{requiredValidatorNumber}] Waiting for more validators to sign. You
-					are able to withdraw after the required number of validators sign.
+					{requiredValidatorNumber}] Waiting for signs. You are able to withdraw
+					after the required number of validators sign. This may take 1-2
+					minutes.
 				</Text>
 			)}
 
