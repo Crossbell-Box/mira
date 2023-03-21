@@ -1,4 +1,4 @@
-import { Accordion } from "@mantine/core";
+import { Accordion, Code } from "@mantine/core";
 import Link from "next/link";
 
 export default function FaqAccordion() {
@@ -7,7 +7,7 @@ export default function FaqAccordion() {
 			<Accordion.Item value="intro">
 				<Accordion.Control>What is $MIRA?</Accordion.Control>
 				<Accordion.Panel>
-					$MIRA is an erc20 token on{" "}
+					$MIRA is an ERC20 token on{" "}
 					<Link
 						href="https://crossbell.io"
 						target="_blank"
@@ -26,10 +26,11 @@ export default function FaqAccordion() {
 				<Accordion.Panel>
 					$MIRA is not listed on any exchanges yet, but you can freely swap it
 					on{" "}
-					<Link href="https://app.uniswap.org/#/swap?inputCurrency=0x27e56fc93a7c9f7ad220c1206ef03ed303bd648b">
+					<Link href="https://app.uniswap.org/#/swap?inputCurrency=0x27e56fc93a7c9f7ad220c1206ef03ed303bd648b&chain=polygon">
 						Uniswap
 					</Link>{" "}
-					(currently only on the Polygon network) .
+					(currently only on the Polygon network with token address{" "}
+					<Code>0x27e56fc93a7c9f7ad220c1206ef03ed303bd648b</Code>).
 				</Accordion.Panel>
 			</Accordion.Item>
 

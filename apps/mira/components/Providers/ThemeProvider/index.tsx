@@ -6,23 +6,42 @@ import {
 	DefaultMantineColor,
 	Tuple,
 } from "@mantine/core";
-import { useColorScheme, useLocalStorage } from "@mantine/hooks";
-import React, { PropsWithChildren } from "react";
+import { useColorScheme } from "@mantine/hooks";
+import { getCookie, setCookie } from "cookies-next";
+import { AppContext } from "next/app";
+import React, { PropsWithChildren, useState } from "react";
 
 export const emotionCache = createEmotionCache({
 	key: "mantine",
 	prepend: false, // https://github.com/mantinedev/mantine/issues/823#issuecomment-1065833889
 });
 
-export default function ThemeProvider({ children }: PropsWithChildren) {
+export const getColorSchemeInServer = (appContext: AppContext) => {
+	return (
+		(getCookie("mantine-color-scheme", appContext.ctx) as string | undefined) ||
+		"light"
+	);
+};
+
+export default function ThemeProvider(
+	props: PropsWithChildren<{
+		colorScheme: ColorScheme;
+	}>
+) {
 	const preferredColorScheme = useColorScheme();
-	const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
-		key: "mantine-color-scheme",
-		defaultValue: preferredColorScheme,
-		getInitialValueInEffect: true,
-	});
-	const toggleColorScheme = (value?: ColorScheme) =>
-		setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+	const [colorScheme, setColorScheme] = useState<ColorScheme>(
+		props.colorScheme ?? preferredColorScheme
+	);
+
+	const toggleColorScheme = (value?: ColorScheme) => {
+		const nextColorScheme =
+			value || (colorScheme === "dark" ? "light" : "dark");
+		setColorScheme(nextColorScheme);
+		// when color scheme is updated save it to cookie
+		setCookie("mantine-color-scheme", nextColorScheme, {
+			maxAge: 60 * 60 * 24 * 30,
+		});
+	};
 
 	return (
 		<ColorSchemeProvider
@@ -59,7 +78,7 @@ export default function ThemeProvider({ children }: PropsWithChildren) {
 					primaryColor: "brand",
 				}}
 			>
-				{children}
+				{props.children}
 			</MantineProvider>
 		</ColorSchemeProvider>
 	);

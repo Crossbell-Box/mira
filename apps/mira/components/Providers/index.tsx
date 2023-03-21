@@ -1,3 +1,4 @@
+import { ColorScheme } from "@mantine/core";
 import JotaiProvider from "./JotaiProvider";
 import ModalProvider from "./ModalProvider";
 import MotionProvider from "./MotionProvider";
@@ -5,9 +6,14 @@ import NotificationProvider from "./NotificationProvider";
 import ThemeProvider from "./ThemeProvider";
 import WalletProvider from "./WalletProvider";
 
-export default function Providers({ children }: React.PropsWithChildren) {
+export default function Providers({
+	children,
+	colorScheme,
+}: React.PropsWithChildren<{
+	colorScheme: ColorScheme;
+}>) {
 	return (
-		<ThemeProvider>
+		<ThemeProvider colorScheme={colorScheme}>
 			<WalletProvider>
 				<JotaiProvider>
 					<MotionProvider>
