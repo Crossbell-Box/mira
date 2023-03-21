@@ -31,7 +31,12 @@ export const prodMainChains: Chain[] = [
 	//bsc
 ];
 export const prodCrossbellChain = crossbell;
-export const prodChains: Chain[] = [mainnet, polygon, bsc, crossbell];
+export const prodChains: Chain[] = [
+	// mainnet,
+	polygon,
+	//bsc,
+	crossbell,
+];
 
 // testnet
 

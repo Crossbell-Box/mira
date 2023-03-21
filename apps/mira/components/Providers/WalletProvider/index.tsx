@@ -12,7 +12,7 @@ export default function WalletProvider({ children }: React.PropsWithChildren) {
 				mode={colorScheme}
 				options={{
 					initialChainId: 0, // https://github.com/family/connectkit/issues/16#issuecomment-1401952961
-					// enforceSupportedChains: false,
+					enforceSupportedChains: false,
 				}}
 			>
 				{children}
