@@ -19,6 +19,25 @@ export default function FaqAccordion() {
 				</Accordion.Panel>
 			</Accordion.Item>
 
+			<Accordion.Item value="deposit">
+				<Accordion.Control>
+					How do I exchange other cryptocurrencies like $USDC for $MIRA?
+				</Accordion.Control>
+				<Accordion.Panel>
+					Swap-in (Or deposit) is not available yet. If you want to swap-in, you
+					can contact us on{" "}
+					<Link
+						href="https://discord.gg/4GCwDsruyj"
+						target="_blank"
+						rel="noreferrer"
+					>
+						Discord
+					</Link>{" "}
+					or{" "}
+					<Link href="mailto:contact@crossbell.io">contact@crossbell.io</Link>.
+				</Accordion.Panel>
+			</Accordion.Item>
+
 			<Accordion.Item value="exchange">
 				<Accordion.Control>
 					How do I exchange $MIRA for other cryptocurrencies like $USDC?
@@ -46,7 +65,8 @@ export default function FaqAccordion() {
 					>
 						Discord
 					</Link>{" "}
-					or <Link href="mailto:crossbell.io">contact@crossbell.io</Link>
+					or{" "}
+					<Link href="mailto:contact@crossbell.io">contact@crossbell.io</Link>.
 				</Accordion.Panel>
 			</Accordion.Item>
 		</Accordion>
