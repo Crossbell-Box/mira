@@ -61,9 +61,11 @@ export function useWithdraw(
 	{
 		enabled = true,
 		onOldWithdrawal = () => {},
+		onSuccess = () => {},
 	}: {
 		enabled?: boolean;
 		onOldWithdrawal?: () => void;
+		onSuccess?: () => void;
 	} = {}
 ) {
 	const { config, error: prepareError } = usePrepareContractWrite({
@@ -93,7 +95,12 @@ export function useWithdraw(
 		enabled: signatures.length > 0 && enabled,
 	});
 
-	const contract = useContractWrite(config);
+	const contract = useContractWrite({
+		...config,
+		onSuccess: () => {
+			onSuccess?.();
+		},
+	});
 
 	return { ...contract, prepareError };
 }

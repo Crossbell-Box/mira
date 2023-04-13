@@ -19,7 +19,12 @@ import { Button, Code, Loader, Space, Text } from "@mantine/core";
 import { useAtom } from "jotai";
 import { useState } from "react";
 import { useWaitForTransaction } from "wagmi";
-import { requestWithdrawalInfo, step, withdrawalInfo } from "./store";
+import {
+	requestWithdrawalInfo,
+	saveRequestWithdrawalTxHashInLocalStorage,
+	step,
+	withdrawalInfo,
+} from "./store";
 
 export default function StepClaim() {
 	const [requestWithdrawalInfoValue] = useAtom(requestWithdrawalInfo);
@@ -84,6 +89,11 @@ export default function StepClaim() {
 			enabled: !withdrawalInfoValue.transactionHash,
 			onOldWithdrawal() {
 				setIsOldWithdrawalError(true);
+			},
+			onSuccess() {
+				saveRequestWithdrawalTxHashInLocalStorage(
+					requestWithdrawalInfoValue.transactionHash
+				);
 			},
 		}
 	);

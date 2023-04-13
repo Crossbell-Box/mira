@@ -13,11 +13,11 @@
 		"@ethersproject/bytes": "^5.7.0",
 		"@ethersproject/providers": "^5.7.2",
 		"@typechain/ethers-v5": "^10.2.0",
-		"eslint": "^8.36.0",
+		"eslint": "^8.38.0",
 		"eslint-config-custom": "workspace:*",
 		"tsconfig": "workspace:*",
 		"typechain": "^8.1.1",
-		"typescript": "^5.0.2"
+		"typescript": "^5.0.4"
 	},
 	"dependencies": {
 		"ethers": "^5.7.2"

@@ -20,6 +20,7 @@ import {
 	getTokenDecimals,
 	getTokenName,
 } from "@crossbell/bridge-sdk";
+import { isRequestWithdrawalWithdrawnButNotIndexed } from "../Swap/Modal/WithdrawModal/store";
 
 export default function WithdrawalTable() {
 	const { address } = useAccount();
@@ -168,6 +169,12 @@ export default function WithdrawalTable() {
 			},
 		});
 
+		const withdrawnInLocal = isRequestWithdrawalWithdrawnButNotIndexed(
+			o.transaction
+		);
+
+		const isWithdrawing = withdrawnInLocal && o.status === "pending";
+
 		return (
 			<Button
 				size="xs"
@@ -176,8 +183,13 @@ export default function WithdrawalTable() {
 					e.stopPropagation();
 					open();
 				}}
+				disabled={isWithdrawing}
 			>
-				{o.status === "pending" ? "Withdraw" : "View"}
+				{isWithdrawing
+					? "Processing"
+					: o.status === "pending"
+					? "Withdraw"
+					: "View"}
 			</Button>
 		);
 	};
