@@ -24,17 +24,13 @@ export default function FaqAccordion() {
 					How do I exchange other cryptocurrencies like $USDC for $MIRA?
 				</Accordion.Control>
 				<Accordion.Panel>
-					Swap-in (Or deposit) is not available yet. If you want to swap-in, you
-					can contact us on{" "}
-					<Link
-						href="https://discord.gg/4GCwDsruyj"
-						target="_blank"
-						rel="noreferrer"
-					>
-						Discord
+					$MIRA is not listed on any exchanges yet, but you can freely swap it
+					on{" "}
+					<Link href="https://app.uniswap.org/#/swap?outputCurrency=0x27e56fc93a7c9f7ad220c1206ef03ed303bd648b&chain=polygon">
+						Uniswap
 					</Link>{" "}
-					or{" "}
-					<Link href="mailto:contact@crossbell.io">contact@crossbell.io</Link>.
+					(currently only on the Polygon network with token address{" "}
+					<Code>0x27e56fc93a7c9f7ad220c1206ef03ed303bd648b</Code>).
 				</Accordion.Panel>
 			</Accordion.Item>
 
