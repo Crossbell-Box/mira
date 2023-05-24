@@ -8,7 +8,6 @@ import {
 	parseTokenAmount,
 } from "@crossbell/bridge-sdk";
 import { Button, Code, Loader, Space, Text } from "@mantine/core";
-import { BigNumber } from "ethers";
 import { useAtom } from "jotai";
 import { useAccount, useWaitForTransaction } from "wagmi";
 import { useDepositModal } from ".";
@@ -26,8 +25,6 @@ export default function StepRequestDeposit() {
 	const amount = parseTokenAmount(amountStr, decimals);
 
 	const { address = NIL_ADDRESS } = useAccount();
-
-	const fee = BigNumber.from(0); // TODO:
 
 	// 1. Request Deposit
 	const {
@@ -50,7 +47,6 @@ export default function StepRequestDeposit() {
 			const depositId = event.args.depositId.toNumber();
 			const recipient = event.args.recipient;
 			const amount = event.args.amount;
-			// const fee = event.args.fee;
 			const transactionHash = data.transactionHash;
 			const blockNumber = data.blockNumber;
 			setRequestDepositInfo({
@@ -60,7 +56,6 @@ export default function StepRequestDeposit() {
 				blockNumber,
 				recipient,
 				amount,
-				// fee,
 			});
 
 			handleTransactionSuccess(data);

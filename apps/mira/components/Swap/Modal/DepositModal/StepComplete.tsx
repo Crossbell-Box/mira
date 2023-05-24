@@ -16,7 +16,6 @@ export default function StepComplete() {
 		requestDepositInfoValue.amount,
 		decimals
 	);
-	// const feeStr = formatTokenAmount(requestDepositInfoValue.fee, decimals);
 
 	const { close } = useDepositModal();
 
@@ -25,12 +24,6 @@ export default function StepComplete() {
 			{amountStr}
 		</Text>
 	);
-
-	// const feeElement = (
-	// 	<Text fw="bold" inline span>
-	// 		{feeStr}
-	// 	</Text>
-	// );
 
 	return (
 		<div>
@@ -54,8 +47,6 @@ export default function StepComplete() {
 				Recipient: <Code fw="bold">{requestDepositInfoValue.recipient}</Code>
 				<br />
 				Amount: {amountElement} MIRA
-				<br />
-				{/*Claim Tip Fee: {feeElement} MIRA*/}
 			</Text>
 
 			<Space h="lg" />
