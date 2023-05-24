@@ -2,8 +2,8 @@ import { Stepper } from "@mantine/core";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
 import StepErc20Approval, { useIsAllowanceEnough } from "./StepErc20Approval";
-import StepSwitchSidechainNetwork from "./StepSwitchSidechainNetwork";
 import { step } from "./store";
+import StepSwitchMainchainNetwork from "./StepSwitchMainchainNetwork";
 
 export default function ModalApprove({ onDone }: { onDone?: () => void }) {
 	const [currentStep, setStep] = useAtom(step);
@@ -32,7 +32,7 @@ export default function ModalApprove({ onDone }: { onDone?: () => void }) {
 					{isLoadingAllowance && <>Checking your allowance...</>}
 				</Stepper.Step>
 				<Stepper.Step label="First step" description="Switch network">
-					<StepSwitchSidechainNetwork />
+					<StepSwitchMainchainNetwork />
 				</Stepper.Step>
 				<Stepper.Step label="Second step" description="Approve token">
 					<StepErc20Approval onClickNext={handleClickNext} />

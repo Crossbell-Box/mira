@@ -41,10 +41,6 @@ export function useDepositModal({
 			setRequestDepositInfo(state.requestDepositInfo);
 			setStep(3);
 		}
-		if (state.depositInfo?.transactionHash) {
-			setDepositInfo(state.depositInfo);
-			setStep(5);
-		}
 		if (state.step) {
 			setStep(state.step);
 		}

@@ -10,7 +10,7 @@ export const requestDepositInfo = atomWithReset({
   blockNumber: 0,
   recipient: "",
   amount: BigNumber.from(0),
-  fee: BigNumber.from(0),
+  // fee: BigNumber.from(0),
 });
 
 export const depositInfo = atomWithReset({

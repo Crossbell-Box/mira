@@ -74,7 +74,6 @@ export const indexerRouter = createTRPCRouter({
 			};
 		}),
 
-
 	deposits: publicProcedure
 		.input(
 			z.object({

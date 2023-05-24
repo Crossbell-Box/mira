@@ -1,11 +1,9 @@
 import { Stepper } from "@mantine/core";
 import { useAtom } from "jotai";
-import StepClaim from "./StepClaim";
 import StepComplete from "./StepComplete";
 import StepErc20Approval from "./StepErc20Approval";
 import StepRequestDeposit from "./StepRequestDeposit";
 import StepSwitchMainchainNetwork from "./StepSwitchMainchainNetwork";
-import StepSwitchSidechainNetwork from "./StepSwitchSidechainNetwork";
 import { step } from "./store";
 
 export default function ModalDeposit() {
@@ -22,12 +20,6 @@ export default function ModalDeposit() {
         </Stepper.Step>
         <Stepper.Step label="Third step" description="Request swaps">
           <StepRequestDeposit />
-        </Stepper.Step>
-        <Stepper.Step label="Fifth step" description="Switch network">
-          <StepSwitchSidechainNetwork />
-        </Stepper.Step>
-        <Stepper.Step label="Final step" description="Claim">
-          <StepClaim />
         </Stepper.Step>
         <Stepper.Completed>
           <StepComplete />

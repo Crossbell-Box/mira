@@ -4,11 +4,13 @@ import {
 	Abi as CrossbellGatewayAbi,
 	RequestWithdrawalEvent,
 } from "../abi/CrossbellGateway/types/Abi";
-import { Abi as MainchainGateway } from "../abi/MainchainGateway/types/Abi";
+import {Abi as MainchainGateway, RequestDepositEvent} from "../abi/MainchainGateway/types/Abi";
 
 const logTopics = {
 	RequestWithdrawal:
 		"RequestWithdrawal(uint256,uint256,address,address,uint256,uint256)",
+	RequestDeposit:
+		"RequestDeposit(uint256,uint256,address,address,uint256,bytes32)",
 } as const satisfies Record<
 	// keys
 	string,
@@ -18,6 +20,7 @@ const logTopics = {
 
 type LogEvents = {
 	"RequestWithdrawal(uint256,uint256,address,address,uint256,uint256)": RequestWithdrawalEvent;
+	"RequestDeposit(uint256,uint256,address,address,uint256,bytes32)": RequestDepositEvent;
 };
 
 export function parseLog<TopicName extends keyof typeof logTopics>(

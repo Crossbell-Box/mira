@@ -52,7 +52,7 @@ export default function StepRequestDeposit() {
 			const depositId = event.args.depositId.toNumber();
 			const recipient = event.args.recipient;
 			const amount = event.args.amount;
-			const fee = event.args.fee;
+			// const fee = event.args.fee;
 			const transactionHash = data.transactionHash;
 			const blockNumber = data.blockNumber;
 			setRequestDepositInfo({
@@ -62,7 +62,7 @@ export default function StepRequestDeposit() {
 				blockNumber,
 				recipient,
 				amount,
-				fee,
+				// fee,
 			});
 
 			handleTransactionSuccess(data);
