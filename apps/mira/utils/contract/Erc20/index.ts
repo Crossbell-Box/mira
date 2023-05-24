@@ -8,7 +8,7 @@ import {
 import { handleContractError } from "../base";
 import {
 	getErc20ContractConfig,
-	getCrossbellGatewayContractConfig,
+	getCrossbellGatewayContractConfig, getMainchainGatewayContractConfig,
 } from "../config";
 
 /**
@@ -17,12 +17,13 @@ import {
 export function useTokenApprove(
 	tokenNetworkId: number,
 	tokenName: DepositTokenName,
-	amount: BigNumber
+	amount: BigNumber,
+	deposit?: false,
 ) {
 	const { config, error: prepareError } = usePrepareContractWrite({
 		...getErc20ContractConfig(tokenNetworkId, tokenName),
 		functionName: "approve",
-		args: [getCrossbellGatewayContractConfig().address, amount],
+		args: [deposit ? getMainchainGatewayContractConfig(tokenNetworkId).address : getCrossbellGatewayContractConfig().address, amount],
 		chainId: tokenNetworkId,
 		onError: handleContractError,
 	});
@@ -38,12 +39,13 @@ export function useTokenApprove(
 export function useTokenAllowance(
 	tokenNetworkId: number,
 	tokenName: DepositTokenName,
-	owner: `0x${string}`
+	owner: `0x${string}`,
+	deposit?: false,
 ) {
 	const contract = useContractRead({
 		...getErc20ContractConfig(tokenNetworkId, tokenName),
 		functionName: "allowance",
-		args: [owner, getCrossbellGatewayContractConfig().address],
+		args: [owner, deposit ? getMainchainGatewayContractConfig(tokenNetworkId).address : getCrossbellGatewayContractConfig().address],
 		chainId: tokenNetworkId,
 		cacheOnBlock: true,
 	});

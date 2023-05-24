@@ -29,7 +29,7 @@ export function useIsAllowanceEnough() {
 		data: allowance = BigNumber.from(0),
 		isLoading: isLoadingAllowance,
 		refetch: refetchAllowance,
-	} = useTokenAllowance(mainchainNetworkId, "MIRA", address ?? NIL_ADDRESS);
+	} = useTokenAllowance(mainchainNetworkId, "MIRA", address ?? NIL_ADDRESS, true);
 	useEffect(() => {
 		refetchAllowance();
 	}, []);
@@ -58,7 +58,7 @@ export default function StepErc20Approval({
 		data: allowance = BigNumber.from(0),
 		isLoading: isLoadingAllowance,
 		refetch: refetchAllowance,
-	} = useTokenAllowance(mainchainNetworkId, "MIRA", address ?? NIL_ADDRESS);
+	} = useTokenAllowance(mainchainNetworkId, "MIRA", address ?? NIL_ADDRESS, true);
 	useEffect(() => {
 		refetchAllowance();
 	}, []);
@@ -68,7 +68,7 @@ export default function StepErc20Approval({
 		data: approveTx,
 		write,
 		isLoading: isLoadingSendTransaction,
-	} = useTokenApprove(mainchainNetworkId, "MIRA", amount);
+	} = useTokenApprove(mainchainNetworkId, "MIRA", amount, true);
 
 	// 3. wait for transaction
 	const { isLoading: isMining } = useWaitForTransaction({
@@ -82,7 +82,7 @@ export default function StepErc20Approval({
 
 	const hasEnoughAllowance = allowance?.gte(amount);
 
-	const sidechainNetworkName = (
+	const mainchainNetworkName = (
 		<Text fw="bold" inline span>
 			{getNetworkNameById(mainchainNetworkId)}
 		</Text>
@@ -120,7 +120,7 @@ export default function StepErc20Approval({
 	return (
 		<div>
 			<Text my="md">
-				To swap out $MIRA on the {sidechainNetworkName} network, you need to
+				To swap out $MIRA on the {mainchainNetworkName} network, you need to
 				approve the amount of $MIRA token for the deposit contract.
 			</Text>
 

@@ -19,20 +19,17 @@ export function useRequestDeposit(
 	targetNetworkId: number,
 	recipient: `0x${string}`,
 	originalTokenName: DepositTokenName,
-	amount: BigNumber,
-	fee: BigNumber
+	amount: BigNumber
 ) {
 	const { config, error: prepareError } = usePrepareContractWrite({
 		...getMainchainGatewayContractConfig(targetNetworkId),
 		functionName: "requestDeposit",
 		args: [
-			// BigNumber.from(targetNetworkId),
 			recipient,
-			getContractAddress(crossbellChain.id, originalTokenName),
+			getContractAddress(targetNetworkId, originalTokenName),
 			amount,
-			// BigNumber.from(fee),
 		],
-		chainId: crossbellChain.id,
+		chainId: targetNetworkId,
 		onError: handleContractError,
 	});
 

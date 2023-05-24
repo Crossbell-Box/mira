@@ -15,16 +15,14 @@ import { useDepositModal } from ".";
 import {
 	formAmountAtom,
 	formMainchainNetworkIdAtom,
-	formSidechainNetworkIdAtom,
 } from "../../store";
 import { requestDepositInfo } from "./store";
 
 export default function StepRequestDeposit() {
-	const [sidechainNetworkId] = useAtom(formSidechainNetworkIdAtom);
 	const [mainchainNetworkId] = useAtom(formMainchainNetworkIdAtom);
 	const [amountStr] = useAtom(formAmountAtom);
 
-	const decimals = getTokenDecimals(sidechainNetworkId, "MIRA");
+	const decimals = getTokenDecimals(mainchainNetworkId, "MIRA");
 	const amount = parseTokenAmount(amountStr, decimals);
 
 	const { address = NIL_ADDRESS } = useAccount();
@@ -37,14 +35,14 @@ export default function StepRequestDeposit() {
 		write,
 		isLoading: isLoadingSendTransaction,
 		isSuccess: isSuccessSendTransaction,
-	} = useRequestDeposit(mainchainNetworkId, address, "MIRA", amount, fee);
+	} = useRequestDeposit(mainchainNetworkId, address, "MIRA", amount);
 
 	// 2. Wait for transaction
 	const [requestDepositInfoValue, setRequestDepositInfo] = useAtom(
 		requestDepositInfo
 	);
 	const { isLoading: isMining, isSuccess: isMined } = useWaitForTransaction({
-		chainId: sidechainNetworkId,
+		chainId: mainchainNetworkId,
 		hash: requestDepositTx?.hash,
 		onSuccess: (data) => {
 			const event = parseLog(data.logs, "RequestDeposit");
@@ -76,7 +74,7 @@ export default function StepRequestDeposit() {
 		neededConfirmations,
 		satisfied: isConfirmationsSatisfied,
 	} = useConfirmedBlockNumber(
-		sidechainNetworkId,
+		mainchainNetworkId,
 		requestDepositInfoValue.blockNumber
 	);
 
