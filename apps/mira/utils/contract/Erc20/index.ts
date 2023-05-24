@@ -18,7 +18,7 @@ export function useTokenApprove(
 	tokenNetworkId: number,
 	tokenName: DepositTokenName,
 	amount: BigNumber,
-	deposit?: false,
+	deposit: boolean = false,
 ) {
 	const { config, error: prepareError } = usePrepareContractWrite({
 		...getErc20ContractConfig(tokenNetworkId, tokenName),
@@ -40,7 +40,7 @@ export function useTokenAllowance(
 	tokenNetworkId: number,
 	tokenName: DepositTokenName,
 	owner: `0x${string}`,
-	deposit?: false,
+	deposit: boolean = false,
 ) {
 	const contract = useContractRead({
 		...getErc20ContractConfig(tokenNetworkId, tokenName),
