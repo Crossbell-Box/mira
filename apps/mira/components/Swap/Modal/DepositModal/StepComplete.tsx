@@ -6,7 +6,6 @@ import { requestDepositInfo } from "./store";
 
 export default function StepComplete() {
   const [requestDepositInfoValue] = useAtom(requestDepositInfo);
-  const [depositInfoValue] = useAtom(requestDepositInfo);
 
   const decimals = getTokenDecimals(requestDepositInfoValue.networkId, "MIRA");
   const amountStr = formatTokenAmount(requestDepositInfoValue.amount, decimals);
@@ -28,8 +27,6 @@ export default function StepComplete() {
       <Text my="md">
         Request Tx:{" "}
         <Code fw="bold">{requestDepositInfoValue.transactionHash}</Code>
-        <br />
-        Deposit Tx: <Code fw="bold">{depositInfoValue.transactionHash}</Code>
         <br />
         Network ID: <Code fw="bold">{requestDepositInfoValue.networkId}</Code>
         <br />
