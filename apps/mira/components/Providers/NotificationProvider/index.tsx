@@ -1,14 +1,14 @@
 import { Notifications } from "@mantine/notifications";
 
 export default function NotificationProvider({
-	children,
+  children,
 }: {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }) {
-	return (
-		<>
-			{children}
-			<Notifications />
-		</>
-	);
+  return (
+    <>
+      {children}
+      <Notifications />
+    </>
+  );
 }

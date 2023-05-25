@@ -1,7 +1,7 @@
 export type ContractName =
-	| "MainchainGateway"
-	| "CrossbellGateway"
-	| "Validator";
+  | "MainchainGateway"
+  | "CrossbellGateway"
+  | "Validator";
 
 export type DepositTokenName = "MIRA";
 

@@ -1,19 +1,19 @@
 import { getNetworkNameById } from "@/utils/ethers";
 import { Text } from "@mantine/core";
 import { useAtom } from "jotai";
-import { useWithdrawModal } from ".";
-import { formSidechainNetworkIdAtom } from "../../store";
+import { useDepositModal } from ".";
+import { formMainchainNetworkIdAtom } from "../../store";
 import StepSwitchNetwork from "../common/StepSwitchNetwork";
 
-export default function StepSwitchSidechainNetwork() {
-  const [networkId] = useAtom(formSidechainNetworkIdAtom);
+export default function StepSwitchMainchainNetwork() {
+  const [networkId] = useAtom(formMainchainNetworkIdAtom);
   const NetworkName = (
     <Text fw="bold" inline span>
       {getNetworkNameById(networkId)}
     </Text>
   );
 
-  const { nextStep } = useWithdrawModal();
+  const { nextStep } = useDepositModal();
 
   return (
     <StepSwitchNetwork
@@ -21,8 +21,8 @@ export default function StepSwitchSidechainNetwork() {
       onClickNext={nextStep}
       description={
         <>
-          To swap out $MIRA on the {NetworkName} network, you need to approve
-          the $MIRA token for the withdraw contract.
+          To swap in $MIRA from the {NetworkName} network, you need to approve
+          the token for the deposit contract.
         </>
       }
     />

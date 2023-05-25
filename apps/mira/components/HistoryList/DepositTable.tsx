@@ -3,7 +3,7 @@ import { useAccount } from "wagmi";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MantineReactTable, MRT_Row } from "mantine-react-table";
 import type { MRT_ColumnDef } from "mantine-react-table";
-import type { request_withdrawal } from "@prisma/client";
+import type { request_deposit } from "@prisma/client";
 import { crossbellChain } from "../Providers/WalletProvider/chains";
 import {
   renderAmount,
@@ -13,25 +13,27 @@ import {
   renderTxUrl,
 } from "./table-helpers";
 import { Button, Text } from "@mantine/core";
-import { useWithdrawModal } from "../Swap/Modal/WithdrawModal";
 import { BigNumber } from "ethers";
 import {
+  CONTRACT_ADDRESS,
   formatTokenAmount,
   getTokenDecimals,
   getTokenName,
 } from "@crossbell/bridge-sdk";
-import { isRequestWithdrawalWithdrawnButNotIndexed } from "../Swap/Modal/WithdrawModal/store";
+import { isRequestDepositDepositedButNotIndexed } from "@/components/Swap/Modal/DepositModal/store";
+import { useDepositModal } from "@/components/Swap/Modal/DepositModal";
+import { networkIdToNameMapping } from "@crossbell/bridge-sdk/src/contract/network";
 
-export default function WithdrawalTable() {
+export default function DepositTable() {
   const { address } = useAccount();
 
   const { data, isLoading, isFetching, isError, fetchNextPage } =
-    api.indexer.withdrawals.useInfiniteQuery(
+    api.indexer.deposits.useInfiniteQuery(
       { recipient: address },
       { getNextPageParam: (page) => page.nextCursor }
     );
 
-  const list = useMemo<request_withdrawal[]>(() => {
+  const list = useMemo<request_deposit[]>(() => {
     if (!data) return [];
     return data.pages.flatMap((page) => page.list);
   }, [data]);
@@ -43,7 +45,7 @@ export default function WithdrawalTable() {
   const [globalFilter, setGlobalFilter] = useState<any>();
   const [sorting, setSorting] = useState<any[]>([]);
 
-  const columns = useMemo<MRT_ColumnDef<request_withdrawal>[]>(
+  const columns = useMemo<MRT_ColumnDef<request_deposit>[]>(
     () => [
       {
         accessorKey: "status",
@@ -56,8 +58,8 @@ export default function WithdrawalTable() {
         Cell: renderChainIdAndName,
       },
       {
-        accessorKey: "withdrawal_id",
-        header: "Withdrawal ID",
+        accessorKey: "deposit_id",
+        header: "Deposit ID",
         Cell: renderBigNumberId,
       },
       {
@@ -65,21 +67,9 @@ export default function WithdrawalTable() {
         header: "Amount",
         Cell: ({ row, renderedCellValue }) => {
           const networkId = Number(row.original.mainchain_id);
-          const tokenAddress = row.original.mainchain_token_address;
-          return renderAmount({
-            renderedCellValue,
-            networkId,
-            tokenAddress,
-          });
-        },
-      },
-
-      {
-        accessorKey: "fee",
-        header: "Claim Tip Fee",
-        Cell: ({ row, renderedCellValue }) => {
-          const networkId = Number(row.original.mainchain_id);
-          const tokenAddress = row.original.mainchain_token_address;
+          // const tokenAddress = row.original.crossbell_token_address;
+          const tokenAddress =
+            CONTRACT_ADDRESS.MIRA[networkIdToNameMapping[networkId]]?.address;
           return renderAmount({
             renderedCellValue,
             networkId,
@@ -90,15 +80,6 @@ export default function WithdrawalTable() {
       {
         accessorKey: "transaction",
         header: "Request Tx",
-        Cell: ({ renderedCellValue }) => {
-          const networkId = crossbellChain.id;
-          const txHash = renderedCellValue?.toString() ?? "";
-          return renderTxUrl({ networkId, txHash });
-        },
-      },
-      {
-        accessorKey: "withdrawal_transaction",
-        header: "Withdrawal Tx",
         Cell: ({ row, renderedCellValue }) => {
           const networkId = Number(row.original.mainchain_id);
           const txHash = renderedCellValue?.toString() ?? "";
@@ -143,37 +124,35 @@ export default function WithdrawalTable() {
     fetchMoreOnBottomReached(tableContainerRef.current);
   }, [fetchMoreOnBottomReached]);
 
-  const RowActions = ({ row }: { row: MRT_Row<request_withdrawal> }) => {
+  const RowActions = ({ row }: { row: MRT_Row<request_deposit> }) => {
     const o = row.original;
     const networkId = Number(o.mainchain_id);
     const amount = BigNumber.from(o.token_quantity);
-    const tokenAddress = row.original.mainchain_token_address;
+    // const tokenAddress = row.original.crossbell_token_address;
+    const tokenAddress =
+      CONTRACT_ADDRESS.MIRA[networkIdToNameMapping[networkId]]?.address;
     const tokenName = getTokenName(networkId, tokenAddress);
     const decimals = getTokenDecimals(networkId, tokenName);
     const formattedTokenAmount = formatTokenAmount(amount, decimals);
-    const { open } = useWithdrawModal({
+    const { open } = useDepositModal({
       state: {
         formAmount: formattedTokenAmount,
-        requestWithdrawalInfo: {
+        requestDepositInfo: {
           transactionHash: o.transaction,
           blockNumber: Number.POSITIVE_INFINITY, // this is only used to calculate confirmation; if a data is in history, it's already confirmed
           networkId: Number(o.mainchain_id),
-          withdrawalId: Number(o.withdrawal_id),
+          depositId: Number(o.deposit_id),
           amount: BigNumber.from(o.token_quantity),
-          fee: BigNumber.from(o.fee),
           recipient: o.recipient_address,
-        },
-        withdrawalInfo: {
-          transactionHash: o.withdrawal_transaction ?? "",
         },
       },
     });
 
-    const withdrawnInLocal = isRequestWithdrawalWithdrawnButNotIndexed(
+    const depositedInLocal = isRequestDepositDepositedButNotIndexed(
       o.transaction
     );
 
-    const isWithdrawing = withdrawnInLocal && o.status === "pending";
+    const isDepositing = depositedInLocal && o.status === "pending";
 
     return (
       <Button
@@ -183,13 +162,9 @@ export default function WithdrawalTable() {
           e.stopPropagation();
           open();
         }}
-        disabled={isWithdrawing}
+        disabled={isDepositing}
       >
-        {isWithdrawing
-          ? "Processing"
-          : o.status === "pending"
-          ? "Withdraw"
-          : "View"}
+        {isDepositing ? "Processing" : "View"}
       </Button>
     );
   };

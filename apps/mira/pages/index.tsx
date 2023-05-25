@@ -6,15 +6,15 @@ import { Stack } from "@mantine/core";
 import { NextPageWithLayout } from "./_app";
 
 const Page: NextPageWithLayout = () => {
-	return (
-		<Stack className="container mx-auto">
-			<Swap />
+  return (
+    <Stack className="container mx-auto">
+      <Swap />
 
-			<PendingAlert />
+      <PendingAlert />
 
-			<FaqAccordion />
-		</Stack>
-	);
+      <FaqAccordion />
+    </Stack>
+  );
 };
 
 Page.getLayout = getRootLayout;

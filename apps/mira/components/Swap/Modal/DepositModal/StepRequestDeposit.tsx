@@ -1,6 +1,6 @@
 import { useConfirmedBlockNumber } from "@/utils/contract";
 import { handleTransactionSuccess } from "@/utils/contract/base";
-import { useRequestWithdrawal } from "@/utils/contract/CrossbellGateway";
+import { useRequestDeposit } from "@/utils/contract/CrossbellGateway";
 import { NIL_ADDRESS } from "@/utils/ethers/constants";
 import {
   getTokenDecimals,
@@ -8,61 +8,50 @@ import {
   parseTokenAmount,
 } from "@crossbell/bridge-sdk";
 import { Button, Code, Loader, Space, Text } from "@mantine/core";
-import { BigNumber } from "ethers";
 import { useAtom } from "jotai";
 import { useAccount, useWaitForTransaction } from "wagmi";
-import { useWithdrawModal } from ".";
-import {
-  formAmountAtom,
-  formMainchainNetworkIdAtom,
-  formSidechainNetworkIdAtom,
-} from "../../store";
-import { requestWithdrawalInfo } from "./store";
+import { useDepositModal } from ".";
+import { formAmountAtom, formMainchainNetworkIdAtom } from "../../store";
+import { requestDepositInfo } from "./store";
 
-export default function StepRequestWithdrawal() {
-  const [sidechainNetworkId] = useAtom(formSidechainNetworkIdAtom);
+export default function StepRequestDeposit() {
   const [mainchainNetworkId] = useAtom(formMainchainNetworkIdAtom);
   const [amountStr] = useAtom(formAmountAtom);
 
-  const decimals = getTokenDecimals(sidechainNetworkId, "MIRA");
+  const decimals = getTokenDecimals(mainchainNetworkId, "MIRA");
   const amount = parseTokenAmount(amountStr, decimals);
 
   const { address = NIL_ADDRESS } = useAccount();
 
-  const fee = BigNumber.from(0); // TODO:
-
-  // 1. Request Withdrawal
+  // 1. Request Deposit
   const {
-    data: requestWithdrawalTx,
+    data: requestDepositTx,
     write,
     isLoading: isLoadingSendTransaction,
     isSuccess: isSuccessSendTransaction,
-  } = useRequestWithdrawal(mainchainNetworkId, address, "MIRA", amount, fee);
+  } = useRequestDeposit(mainchainNetworkId, address, "MIRA", amount);
 
   // 2. Wait for transaction
-  const [requestWithdrawalInfoValue, setRequestWithdrawalInfo] = useAtom(
-    requestWithdrawalInfo
-  );
+  const [requestDepositInfoValue, setRequestDepositInfo] =
+    useAtom(requestDepositInfo);
   const { isLoading: isMining, isSuccess: isMined } = useWaitForTransaction({
-    chainId: sidechainNetworkId,
-    hash: requestWithdrawalTx?.hash,
+    chainId: mainchainNetworkId,
+    hash: requestDepositTx?.hash,
     onSuccess: (data) => {
-      const event = parseLog(data.logs, "RequestWithdrawal");
+      const event = parseLog(data.logs, "RequestDeposit");
       const networkId = event.args.chainId.toNumber();
-      const withdrawalId = event.args.withdrawalId.toNumber();
+      const depositId = event.args.depositId.toNumber();
       const recipient = event.args.recipient;
       const amount = event.args.amount;
-      const fee = event.args.fee;
       const transactionHash = data.transactionHash;
       const blockNumber = data.blockNumber;
-      setRequestWithdrawalInfo({
+      setRequestDepositInfo({
         networkId,
-        withdrawalId,
+        depositId,
         transactionHash,
         blockNumber,
         recipient,
         amount,
-        fee,
       });
 
       handleTransactionSuccess(data);
@@ -76,15 +65,15 @@ export default function StepRequestWithdrawal() {
     neededConfirmations,
     satisfied: isConfirmationsSatisfied,
   } = useConfirmedBlockNumber(
-    sidechainNetworkId,
-    requestWithdrawalInfoValue.blockNumber
+    mainchainNetworkId,
+    requestDepositInfoValue.blockNumber
   );
 
   const handleClickRequest = () => {
     write?.();
   };
 
-  const { nextStep } = useWithdrawModal();
+  const { nextStep } = useDepositModal();
   const handleClickNext = () => {
     nextStep();
   };
@@ -95,9 +84,9 @@ export default function StepRequestWithdrawal() {
     </Text>
   );
 
-  const txHash = <Code fw="bold">{requestWithdrawalTx?.hash}</Code>;
+  const txHash = <Code fw="bold">{requestDepositTx?.hash}</Code>;
 
-  const hasAlreadyMined = Boolean(requestWithdrawalInfoValue.transactionHash); // when recovering from history
+  const hasAlreadyMined = Boolean(requestDepositInfoValue.transactionHash); // when recovering from history
   const isSuccess =
     hasAlreadyMined ||
     (isSuccessSendTransaction && isMined && isConfirmationsSatisfied);
@@ -112,27 +101,26 @@ export default function StepRequestWithdrawal() {
         MIRA.
       </Text>
 
-      {requestWithdrawalTx?.hash && isMining && (
+      {requestDepositTx?.hash && isMining && (
         <Text my="md">
           <Loader size="xs" /> Your transaction hash is {txHash}. Please wait
           for the transaction to be mined.
         </Text>
       )}
 
-      {requestWithdrawalTx?.hash && isMined && (
+      {requestDepositTx?.hash && isMined && (
         <Text my="md">✅ Your transaction hash is {txHash}.</Text>
       )}
 
-      {Boolean(requestWithdrawalInfoValue.transactionHash) && (
+      {Boolean(requestDepositInfoValue.transactionHash) && (
         <Text my="md">
-          ✅ Withdrawal ID:{" "}
-          <Code fw="bold">{requestWithdrawalInfoValue.withdrawalId}</Code>.
-          Network ID:{" "}
-          <Code fw="bold">{requestWithdrawalInfoValue.networkId}</Code>.
+          ✅ Deposit ID:{" "}
+          <Code fw="bold">{requestDepositInfoValue.depositId}</Code>. Network
+          ID: <Code fw="bold">{requestDepositInfoValue.networkId}</Code>.
         </Text>
       )}
 
-      {Boolean(requestWithdrawalInfoValue.blockNumber) &&
+      {Boolean(requestDepositInfoValue.blockNumber) &&
         isLoadingConfirmation && (
           <Text my="md">
             <Loader size="xs" /> Waiting for confirmations... {confirmations}/
@@ -156,7 +144,7 @@ export default function StepRequestWithdrawal() {
         >
           {isLoadingSendTransaction && "Please Approve in Your Wallet..."}
           {isMining && "Mining Transaction..."}
-          {!isLoading && "Request Withdrawal"}
+          {!isLoading && "Request Deposit"}
         </Button>
       )}
     </div>

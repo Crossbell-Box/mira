@@ -12,14 +12,14 @@ import { BigNumber } from "ethers";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
 import { useAccount, useWaitForTransaction } from "wagmi";
-import { useWithdrawModal } from ".";
-import { formAmountAtom, formSidechainNetworkIdAtom } from "../../store";
+import { useDepositModal } from ".";
+import { formAmountAtom, formMainchainNetworkIdAtom } from "../../store";
 
 export function useIsAllowanceEnough() {
-  const [sidechainNetworkId] = useAtom(formSidechainNetworkIdAtom);
+  const [mainchainNetworkId] = useAtom(formMainchainNetworkIdAtom);
   const [amountStr] = useAtom(formAmountAtom);
 
-  const decimals = getTokenDecimals(sidechainNetworkId, "MIRA");
+  const decimals = getTokenDecimals(mainchainNetworkId, "MIRA");
   const amount = parseTokenAmount(amountStr, decimals);
 
   const { address } = useAccount();
@@ -29,7 +29,12 @@ export function useIsAllowanceEnough() {
     data: allowance = BigNumber.from(0),
     isLoading: isLoadingAllowance,
     refetch: refetchAllowance,
-  } = useTokenAllowance(sidechainNetworkId, "MIRA", address ?? NIL_ADDRESS);
+  } = useTokenAllowance(
+    mainchainNetworkId,
+    "MIRA",
+    address ?? NIL_ADDRESS,
+    true
+  );
   useEffect(() => {
     refetchAllowance();
   }, []);
@@ -45,10 +50,10 @@ export default function StepErc20Approval({
 }: {
   onClickNext?: () => void;
 }) {
-  const [sidechainNetworkId] = useAtom(formSidechainNetworkIdAtom);
+  const [mainchainNetworkId] = useAtom(formMainchainNetworkIdAtom);
   const [amountStr] = useAtom(formAmountAtom);
 
-  const decimals = getTokenDecimals(sidechainNetworkId, "MIRA");
+  const decimals = getTokenDecimals(mainchainNetworkId, "MIRA");
   const amount = parseTokenAmount(amountStr, decimals);
 
   const { address } = useAccount();
@@ -58,7 +63,12 @@ export default function StepErc20Approval({
     data: allowance = BigNumber.from(0),
     isLoading: isLoadingAllowance,
     refetch: refetchAllowance,
-  } = useTokenAllowance(sidechainNetworkId, "MIRA", address ?? NIL_ADDRESS);
+  } = useTokenAllowance(
+    mainchainNetworkId,
+    "MIRA",
+    address ?? NIL_ADDRESS,
+    true
+  );
   useEffect(() => {
     refetchAllowance();
   }, []);
@@ -68,11 +78,11 @@ export default function StepErc20Approval({
     data: approveTx,
     write,
     isLoading: isLoadingSendTransaction,
-  } = useTokenApprove(sidechainNetworkId, "MIRA", amount);
+  } = useTokenApprove(mainchainNetworkId, "MIRA", amount, true);
 
   // 3. wait for transaction
   const { isLoading: isMining } = useWaitForTransaction({
-    chainId: sidechainNetworkId,
+    chainId: mainchainNetworkId,
     hash: approveTx?.hash,
     onSuccess: (data) => {
       handleTransactionSuccess(data);
@@ -82,9 +92,9 @@ export default function StepErc20Approval({
 
   const hasEnoughAllowance = allowance?.gte(amount);
 
-  const sidechainNetworkName = (
+  const mainchainNetworkName = (
     <Text fw="bold" inline span>
-      {getNetworkNameById(sidechainNetworkId)}
+      {getNetworkNameById(mainchainNetworkId)}
     </Text>
   );
 
@@ -106,7 +116,7 @@ export default function StepErc20Approval({
     }
   };
 
-  const { nextStep } = useWithdrawModal();
+  const { nextStep } = useDepositModal();
   const handleClickNext = () => {
     if (onClickNext) {
       onClickNext();
@@ -120,20 +130,20 @@ export default function StepErc20Approval({
   return (
     <div>
       <Text my="md">
-        To swap out $MIRA on the {sidechainNetworkName} network, you need to
-        approve the amount of $MIRA token for the withdraw contract.
+        To swap out $MIRA on the {mainchainNetworkName} network, you need to
+        approve the amount of $MIRA token for the deposit contract.
       </Text>
 
       {isLoadingAllowance ? (
         <Text my="md">
           <Loader size="xs" /> You have approved ... MIRA ({requiredAllowance}{" "}
-          required) for the withdraw contract.
+          required) for the deposit contract.
         </Text>
       ) : (
         <Text my="md">
           {hasEnoughAllowance ? "✅" : "😕"} You have approved{" "}
-          {currentAllowance} MIRA ({requiredAllowance} required) for the
-          withdraw contract.
+          {currentAllowance} MIRA ({requiredAllowance} required) for the deposit
+          contract.
         </Text>
       )}
 

@@ -8,8 +8,8 @@ import { indexerRouter } from "./routers/indexer";
  * All routers added in /api/routers should be manually added here
  */
 export const appRouter = createTRPCRouter({
-	example: exampleRouter,
-	indexer: indexerRouter,
+  example: exampleRouter,
+  indexer: indexerRouter,
 });
 
 // export type definition of API
