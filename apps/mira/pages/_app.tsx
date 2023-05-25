@@ -10,77 +10,77 @@ import { ColorScheme } from "@mantine/core";
 import "@/styles/globals.css";
 
 export type NextPageWithLayout<P = Record<string, unknown>, IP = P> = NextPage<
-	P,
-	IP
+  P,
+  IP
 > & {
-	getLayout?: (page: ReactElement) => ReactNode;
+  getLayout?: (page: ReactElement) => ReactNode;
 };
 
 type AppPropsWithLayout = AppProps<{
-	colorScheme: ColorScheme;
+  colorScheme: ColorScheme;
 }> & {
-	Component: NextPageWithLayout;
+  Component: NextPageWithLayout;
 };
 
 const App = (props: AppPropsWithLayout) => {
-	const { Component, pageProps } = props;
-	const { colorScheme } = pageProps;
+  const { Component, pageProps } = props;
+  const { colorScheme } = pageProps;
 
-	const getLayout = Component.getLayout ?? ((page) => page);
+  const getLayout = Component.getLayout ?? ((page) => page);
 
-	return (
-		<>
-			<Head>
-				<title>$MIRA</title>
-				<meta
-					name="viewport"
-					content="minimum-scale=1, initial-scale=1, width=device-width"
-				/>
-				<meta
-					name="description"
-					content="$MIRA is an ERC20 token on Crossbell chain."
-				/>
-				<link rel="shortcut icon" href="/favicon.ico" />
+  return (
+    <>
+      <Head>
+        <title>$MIRA</title>
+        <meta
+          name="viewport"
+          content="minimum-scale=1, initial-scale=1, width=device-width"
+        />
+        <meta
+          name="description"
+          content="$MIRA is an ERC20 token on Crossbell chain."
+        />
+        <link rel="shortcut icon" href="/favicon.ico" />
 
-				<DefaultSeo
-					openGraph={{
-						type: "website",
-						url: "https://mira.crossbell.io/",
-						siteName: "$MIRA",
-						description: "$MIRA is an ERC20 token on Crossbell chain.",
-						images: [
-							{
-								url: "https://mira.crossbell.io/og.jpg",
-								height: 630,
-								width: 1200,
-								alt: "$MIRA",
-							},
-						],
-					}}
-					twitter={{
-						handle: "@_Crossbell",
-						site: "@_Crossbell",
-						cardType: "summary_large_image",
-					}}
-				/>
-			</Head>
+        <DefaultSeo
+          openGraph={{
+            type: "website",
+            url: "https://mira.crossbell.io/",
+            siteName: "$MIRA",
+            description: "$MIRA is an ERC20 token on Crossbell chain.",
+            images: [
+              {
+                url: "https://mira.crossbell.io/og.jpg",
+                height: 630,
+                width: 1200,
+                alt: "$MIRA",
+              },
+            ],
+          }}
+          twitter={{
+            handle: "@_Crossbell",
+            site: "@_Crossbell",
+            cardType: "summary_large_image",
+          }}
+        />
+      </Head>
 
-			<Providers colorScheme={colorScheme}>
-				{getLayout(<Component {...pageProps} />)}
-			</Providers>
-		</>
-	);
+      <Providers colorScheme={colorScheme}>
+        {getLayout(<Component {...pageProps} />)}
+      </Providers>
+    </>
+  );
 };
 
 App.getInitialProps = async (appContext: AppContext) => {
-	const appProps = await NextApp.getInitialProps(appContext);
-	return {
-		...appProps,
-		pageProps: {
-			...appProps?.pageProps,
-			colorScheme: getColorSchemeInServer(appContext),
-		},
-	};
+  const appProps = await NextApp.getInitialProps(appContext);
+  return {
+    ...appProps,
+    pageProps: {
+      ...appProps?.pageProps,
+      colorScheme: getColorSchemeInServer(appContext),
+    },
+  };
 };
 
 export default api.withTRPC(App);

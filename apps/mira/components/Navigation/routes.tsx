@@ -5,38 +5,38 @@ import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 
 type Route = {
-	path: string;
-	name: string;
-	icon: React.ReactElement;
+  path: string;
+  name: string;
+  icon: React.ReactElement;
 };
 
 export const routes: Record<string, Route> = {
-	home: { path: "/", name: "Home", icon: <IconHome /> },
-	history: { path: "/history", name: "History", icon: <IconHistory /> },
+  home: { path: "/", name: "Home", icon: <IconHome /> },
+  history: { path: "/history", name: "History", icon: <IconHistory /> },
 };
 
 export function useRoutes() {
-	const [routeArr, setRouteArr] = useState<Route[]>([]);
+  const [routeArr, setRouteArr] = useState<Route[]>([]);
 
-	const { address } = useAccount();
+  const { address } = useAccount();
 
-	const isMounted = useIsMounted();
+  const isMounted = useIsMounted();
 
-	useEffect(() => {
-		// home
-		setRouteArr((prev) => [...prev, routes.home]);
+  useEffect(() => {
+    // home
+    setRouteArr((prev) => [...prev, routes.home]);
 
-		// history
-		if (address) {
-			setRouteArr((prev) => [...prev, routes.history]);
-		}
+    // history
+    if (address) {
+      setRouteArr((prev) => [...prev, routes.history]);
+    }
 
-		return () => {
-			setRouteArr([]);
-		};
-	}, [address]);
+    return () => {
+      setRouteArr([]);
+    };
+  }, [address]);
 
-	const { route } = useRouter();
+  const { route } = useRouter();
 
-	return { routes: routeArr, currentRoutePath: route };
+  return { routes: routeArr, currentRoutePath: route };
 }

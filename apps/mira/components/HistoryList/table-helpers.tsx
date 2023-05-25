@@ -1,96 +1,96 @@
 import {
-	getNetworkNameById,
-	getTxScanUrl,
-	truncateAddress,
+  getNetworkNameById,
+  getTxScanUrl,
+  truncateAddress,
 } from "@/utils/ethers";
 import {
-	formatTokenAmount,
-	getTokenDecimals,
-	getTokenName,
+  formatTokenAmount,
+  getTokenDecimals,
+  getTokenName,
 } from "@crossbell/bridge-sdk";
 import { Badge, Tooltip, Text } from "@mantine/core";
 import Link from "next/link";
 import { ReactNode } from "react";
 
 export function renderStatusCell({
-	renderedCellValue,
+  renderedCellValue,
 }: {
-	renderedCellValue: ReactNode;
+  renderedCellValue: ReactNode;
 }) {
-	const status = renderedCellValue?.toString();
-	return (
-		<Badge color={status === "pending" ? "blue" : "green"}>{status}</Badge>
-	);
+  const status = renderedCellValue?.toString();
+  return (
+    <Badge color={status === "pending" ? "blue" : "green"}>{status}</Badge>
+  );
 }
 
 export function renderChainIdAndName({
-	renderedCellValue,
+  renderedCellValue,
 }: {
-	renderedCellValue: ReactNode;
+  renderedCellValue: ReactNode;
 }) {
-	const networkId = Number(renderedCellValue?.toString());
-	const networkName = getNetworkNameById(networkId);
-	return (
-		<>
-			{networkId} ({networkName})
-		</>
-	);
+  const networkId = Number(renderedCellValue?.toString());
+  const networkName = getNetworkNameById(networkId);
+  return (
+    <>
+      {networkId} ({networkName})
+    </>
+  );
 }
 
 export function renderBigNumberId({
-	renderedCellValue,
+  renderedCellValue,
 }: {
-	renderedCellValue: ReactNode;
+  renderedCellValue: ReactNode;
 }) {
-	return <>{renderedCellValue?.toString()}</>;
+  return <>{renderedCellValue?.toString()}</>;
 }
 
 export function renderTxUrl({
-	networkId,
-	txHash,
+  networkId,
+  txHash,
 }: {
-	networkId: number;
-	txHash: string;
+  networkId: number;
+  txHash: string;
 }) {
-	if (!txHash) {
-		return <>N/A</>;
-	}
-	const url = getTxScanUrl(networkId, txHash);
-	const TxText = (
-		<Tooltip label={txHash} withinPortal>
-			<Text>{truncateAddress(txHash)}</Text>
-		</Tooltip>
-	);
-	if (!url) return TxText;
-	return (
-		<Link
-			href={url}
-			target="_blank"
-			rel="noreferrer noopener"
-			onClick={(e) => {
-				e.stopPropagation();
-			}}
-		>
-			{TxText}
-		</Link>
-	);
+  if (!txHash) {
+    return <>N/A</>;
+  }
+  const url = getTxScanUrl(networkId, txHash);
+  const TxText = (
+    <Tooltip label={txHash} withinPortal>
+      <Text>{truncateAddress(txHash)}</Text>
+    </Tooltip>
+  );
+  if (!url) return TxText;
+  return (
+    <Link
+      href={url}
+      target="_blank"
+      rel="noreferrer noopener"
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+    >
+      {TxText}
+    </Link>
+  );
 }
 
 export function renderAmount({
-	renderedCellValue,
-	networkId,
-	tokenAddress,
+  renderedCellValue,
+  networkId,
+  tokenAddress,
 }: {
-	renderedCellValue: ReactNode;
-	networkId: number;
-	tokenAddress: string;
+  renderedCellValue: ReactNode;
+  networkId: number;
+  tokenAddress: string;
 }) {
-	const amount = renderedCellValue?.toString() ?? "";
-	const tokenName = getTokenName(networkId, tokenAddress);
-	const decimals = getTokenDecimals(networkId, tokenName);
-	return (
-		<>
-			{formatTokenAmount(amount, decimals)} {tokenName}
-		</>
-	);
+  const amount = renderedCellValue?.toString() ?? "";
+  const tokenName = getTokenName(networkId, tokenAddress);
+  const decimals = getTokenDecimals(networkId, tokenName);
+  return (
+    <>
+      {formatTokenAmount(amount, decimals)} {tokenName}
+    </>
+  );
 }

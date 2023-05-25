@@ -1,6 +1,6 @@
 import {
-	crossbellChain,
-	mainChains,
+  crossbellChain,
+  mainChains,
 } from "@/components/Providers/WalletProvider/chains";
 import { atom } from "jotai";
 import { atomWithReset } from "jotai/utils";

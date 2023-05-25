@@ -1,73 +1,84 @@
 import { DepositTokenName } from "@crossbell/bridge-sdk/src/contract/type";
 import { BigNumber } from "ethers";
 import {
-	usePrepareContractWrite,
-	useContractWrite,
-	useContractRead,
+  usePrepareContractWrite,
+  useContractWrite,
+  useContractRead,
 } from "wagmi";
 import { handleContractError } from "../base";
 import {
-	getErc20ContractConfig,
-	getCrossbellGatewayContractConfig, getMainchainGatewayContractConfig,
+  getErc20ContractConfig,
+  getCrossbellGatewayContractConfig,
+  getMainchainGatewayContractConfig,
 } from "../config";
 
 /**
  * Approve the token on this network to MainchainGateway to withdraw the amount.
  */
 export function useTokenApprove(
-	tokenNetworkId: number,
-	tokenName: DepositTokenName,
-	amount: BigNumber,
-	deposit: boolean = false,
+  tokenNetworkId: number,
+  tokenName: DepositTokenName,
+  amount: BigNumber,
+  deposit: boolean = false
 ) {
-	const { config, error: prepareError } = usePrepareContractWrite({
-		...getErc20ContractConfig(tokenNetworkId, tokenName),
-		functionName: "approve",
-		args: [deposit ? getMainchainGatewayContractConfig(tokenNetworkId).address : getCrossbellGatewayContractConfig().address, amount],
-		chainId: tokenNetworkId,
-		onError: handleContractError,
-	});
+  const { config, error: prepareError } = usePrepareContractWrite({
+    ...getErc20ContractConfig(tokenNetworkId, tokenName),
+    functionName: "approve",
+    args: [
+      deposit
+        ? getMainchainGatewayContractConfig(tokenNetworkId).address
+        : getCrossbellGatewayContractConfig().address,
+      amount,
+    ],
+    chainId: tokenNetworkId,
+    onError: handleContractError,
+  });
 
-	const contract = useContractWrite(config);
+  const contract = useContractWrite(config);
 
-	return { ...contract, prepareError };
+  return { ...contract, prepareError };
 }
 
 /**
  * Get the allowance of the token on this network to MainchainGateway.
  */
 export function useTokenAllowance(
-	tokenNetworkId: number,
-	tokenName: DepositTokenName,
-	owner: `0x${string}`,
-	deposit: boolean = false,
+  tokenNetworkId: number,
+  tokenName: DepositTokenName,
+  owner: `0x${string}`,
+  deposit: boolean = false
 ) {
-	const contract = useContractRead({
-		...getErc20ContractConfig(tokenNetworkId, tokenName),
-		functionName: "allowance",
-		args: [owner, deposit ? getMainchainGatewayContractConfig(tokenNetworkId).address : getCrossbellGatewayContractConfig().address],
-		chainId: tokenNetworkId,
-		cacheOnBlock: true,
-	});
+  const contract = useContractRead({
+    ...getErc20ContractConfig(tokenNetworkId, tokenName),
+    functionName: "allowance",
+    args: [
+      owner,
+      deposit
+        ? getMainchainGatewayContractConfig(tokenNetworkId).address
+        : getCrossbellGatewayContractConfig().address,
+    ],
+    chainId: tokenNetworkId,
+    cacheOnBlock: true,
+  });
 
-	return contract;
+  return contract;
 }
 
 /**
  * Get the balance of the token on this network.
  */
 export function useTokenBalance(
-	tokenNetworkId: number,
-	tokenName: DepositTokenName,
-	owner: `0x${string}`
+  tokenNetworkId: number,
+  tokenName: DepositTokenName,
+  owner: `0x${string}`
 ) {
-	const contract = useContractRead({
-		...getErc20ContractConfig(tokenNetworkId, tokenName),
-		functionName: "balanceOf",
-		args: [owner],
-		chainId: tokenNetworkId,
-		cacheOnBlock: true,
-	});
+  const contract = useContractRead({
+    ...getErc20ContractConfig(tokenNetworkId, tokenName),
+    functionName: "balanceOf",
+    args: [owner],
+    chainId: tokenNetworkId,
+    cacheOnBlock: true,
+  });
 
-	return contract;
+  return contract;
 }

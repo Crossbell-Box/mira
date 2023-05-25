@@ -2,26 +2,26 @@ import { getNeededConfirmations } from "@crossbell/bridge-sdk";
 import { useBlockNumber } from "wagmi";
 
 export function useConfirmedBlockNumber(
-	chainId: number,
-	txBlockNumber?: number
+  chainId: number,
+  txBlockNumber?: number
 ) {
-	let { data: currentBlockNumber, ...props } = useBlockNumber({
-		chainId,
-		watch: true,
-		enabled: Boolean(txBlockNumber),
-	});
+  let { data: currentBlockNumber, ...props } = useBlockNumber({
+    chainId,
+    watch: true,
+    enabled: Boolean(txBlockNumber),
+  });
 
-	const neededConfirmations = getNeededConfirmations(chainId);
+  const neededConfirmations = getNeededConfirmations(chainId);
 
-	let confirmations: number | undefined;
-	if (currentBlockNumber && txBlockNumber) {
-		confirmations = currentBlockNumber - txBlockNumber;
-	}
+  let confirmations: number | undefined;
+  if (currentBlockNumber && txBlockNumber) {
+    confirmations = currentBlockNumber - txBlockNumber;
+  }
 
-	return {
-		confirmations,
-		neededConfirmations,
-		satisfied: currentBlockNumber && currentBlockNumber >= neededConfirmations,
-		...props,
-	};
+  return {
+    confirmations,
+    neededConfirmations,
+    satisfied: currentBlockNumber && currentBlockNumber >= neededConfirmations,
+    ...props,
+  };
 }

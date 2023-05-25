@@ -4,11 +4,11 @@ import { Stack } from "@mantine/core";
 import { NextPageWithLayout } from "./_app";
 
 const Page: NextPageWithLayout = () => {
-	return (
-		<Stack className="container mx-auto">
-			<HistoryList />
-		</Stack>
-	);
+  return (
+    <Stack className="container mx-auto">
+      <HistoryList />
+    </Stack>
+  );
 };
 
 Page.getLayout = getRootLayout;

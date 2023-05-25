@@ -6,25 +6,25 @@ import { formSidechainNetworkIdAtom } from "../../store";
 import StepSwitchNetwork from "../common/StepSwitchNetwork";
 
 export default function StepSwitchSidechainNetwork() {
-	const [networkId] = useAtom(formSidechainNetworkIdAtom);
-	const NetworkName = (
-		<Text fw="bold" inline span>
-			{getNetworkNameById(networkId)}
-		</Text>
-	);
+  const [networkId] = useAtom(formSidechainNetworkIdAtom);
+  const NetworkName = (
+    <Text fw="bold" inline span>
+      {getNetworkNameById(networkId)}
+    </Text>
+  );
 
-	const { nextStep } = useWithdrawModal();
+  const { nextStep } = useWithdrawModal();
 
-	return (
-		<StepSwitchNetwork
-			targetNetworkId={networkId}
-			onClickNext={nextStep}
-			description={
-				<>
-					To swap out $MIRA on the {NetworkName} network, you need to approve
-					the $MIRA token for the withdraw contract.
-				</>
-			}
-		/>
-	);
+  return (
+    <StepSwitchNetwork
+      targetNetworkId={networkId}
+      onClickNext={nextStep}
+      description={
+        <>
+          To swap out $MIRA on the {NetworkName} network, you need to approve
+          the $MIRA token for the withdraw contract.
+        </>
+      }
+    />
+  );
 }

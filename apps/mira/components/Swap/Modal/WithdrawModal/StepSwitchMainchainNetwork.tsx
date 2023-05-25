@@ -6,24 +6,24 @@ import { formMainchainNetworkIdAtom } from "../../store";
 import StepSwitchNetwork from "../common/StepSwitchNetwork";
 
 export default function StepSwitchMainchainNetwork() {
-	const [networkId] = useAtom(formMainchainNetworkIdAtom);
-	const NetworkName = (
-		<Text fw="bold" inline span>
-			{getNetworkNameById(networkId)}
-		</Text>
-	);
+  const [networkId] = useAtom(formMainchainNetworkIdAtom);
+  const NetworkName = (
+    <Text fw="bold" inline span>
+      {getNetworkNameById(networkId)}
+    </Text>
+  );
 
-	const { nextStep } = useWithdrawModal();
+  const { nextStep } = useWithdrawModal();
 
-	return (
-		<StepSwitchNetwork
-			targetNetworkId={networkId}
-			onClickNext={nextStep}
-			description={
-				<>
-					To withdraw $MIRA on the {NetworkName} network, you need to claim it.
-				</>
-			}
-		/>
-	);
+  return (
+    <StepSwitchNetwork
+      targetNetworkId={networkId}
+      onClickNext={nextStep}
+      description={
+        <>
+          To withdraw $MIRA on the {NetworkName} network, you need to claim it.
+        </>
+      }
+    />
+  );
 }
