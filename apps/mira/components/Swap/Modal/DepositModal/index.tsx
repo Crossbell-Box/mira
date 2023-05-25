@@ -1,5 +1,5 @@
 import {closeModal, openModal} from "@mantine/modals";
-import {step, requestDepositInfo, depositInfo} from "./store";
+import {step, requestDepositInfo} from "./store";
 import {formAmountAtom} from "@/components/Swap/store";
 import {useAtom} from "jotai";
 import {useResetAtom} from "jotai/utils";
@@ -14,22 +14,18 @@ export function useDepositModal({
 		step?: ReturnType<(typeof step)["read"]>;
 		formAmount?: ReturnType<(typeof formAmountAtom)["read"]>;
 		requestDepositInfo?: ReturnType<(typeof requestDepositInfo)["read"]>;
-		depositInfo?: ReturnType<(typeof depositInfo)["read"]>;
 	},
 	checkAllowance?: boolean;
 } = {}) {
 	const [_, setStep] = useAtom(step);
 	const [__, setRequestDepositInfo] = useAtom(requestDepositInfo);
-	const [___, setDepositInfo] = useAtom(depositInfo);
 	const [____, setFormAmount] = useAtom(formAmountAtom);
 	const resetStep = useResetAtom(step);
 	const resetRequestDepositInfo = useResetAtom(requestDepositInfo)
-	const resetDepositInfo = useResetAtom(depositInfo);
 
 	const resetState = () => {
 		resetStep();
 		resetRequestDepositInfo();
-		resetDepositInfo();
 	};
 
 	const initState = () => {
