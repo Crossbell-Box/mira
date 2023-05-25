@@ -2,6 +2,7 @@ import { useIsMounted } from "@/utils/ssr";
 import { Stack } from "@mantine/core";
 import { useAccount } from "wagmi";
 import WithdrawalTable from "./WithdrawTable";
+import DepositTable from "@/components/HistoryList/DepositTable";
 
 export default function HistoryList() {
 	const isMounted = useIsMounted();
@@ -14,8 +15,11 @@ export default function HistoryList() {
 	}
 
 	return (
-		<>
+		<div>
+			<h2>Deposits</h2>
+			<DepositTable />
+			<h2>Withdrawals</h2>
 			<WithdrawalTable />
-		</>
+		</div>
 	);
 }
