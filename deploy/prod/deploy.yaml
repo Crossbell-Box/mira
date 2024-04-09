@@ -23,12 +23,12 @@ spec:
         tier: api
     spec:
       containers:
-        - image: $IMAGE_TAG_RELEASE
+        - image: flosspicks/mira
           imagePullPolicy: Always
           name: mira
           envFrom:
             - secretRef:
-                name: mira-secret
+                name: mira
           ports:
             - containerPort: 3000
               protocol: TCP
