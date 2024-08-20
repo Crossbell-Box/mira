@@ -15,7 +15,7 @@ COPY --from=builder /app/out/json/ .
 COPY --from=builder /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
 COPY --from=builder /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
 RUN npm i -g pnpm
-RUN pnpm i
+RUN pnpm i --frozen-lockfile
 
 # Build the project
 COPY --from=builder /app/out/full/ .
